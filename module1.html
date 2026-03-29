@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Module 1 – Variables & Data Types | English</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f1a;
+    --card: #13162a;
+    --card2: #181c30;
+    --accent: #00e5ff;
+    --accent2: #ff6f3c;
+    --accent3: #a259ff;
+    --green: #00ffb2;
+    --yellow: #ffe566;
+    --text: #e8eaf6;
+    --muted: #7b82a8;
+    --border: rgba(0,229,255,0.13);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 80% 10%, rgba(0,229,255,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 10% 80%, rgba(162,89,255,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 30% at 50% 50%, rgba(255,111,60,0.04) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  .yt-header {
+    background: linear-gradient(135deg, #13162a 0%, #1a1040 100%);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 36px 36px 28px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeDown 0.7s ease both;
+  }
+  .yt-header::after {
+    content: '🐍';
+    position: absolute;
+    right: 32px; top: 24px;
+    font-size: 72px;
+    opacity: 0.13;
+    pointer-events: none;
+  }
+
+  .badge-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 50px;
+    border: 1.5px solid;
+  }
+  .badge-cyan { color: var(--accent); border-color: var(--accent); background: rgba(0,229,255,0.07); }
+  .badge-orange { color: var(--accent2); border-color: var(--accent2); background: rgba(255,111,60,0.07); }
+  .badge-purple { color: var(--accent3); border-color: var(--accent3); background: rgba(162,89,255,0.07); }
+
+  .yt-header h1 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 2.3rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .yt-header .subtitle {
+    font-size: 1rem;
+    color: var(--muted);
+    font-weight: 600;
+    margin-bottom: 18px;
+  }
+  .progress-bar-wrap {
+    background: rgba(255,255,255,0.07);
+    border-radius: 50px;
+    height: 6px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    width: 14%;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    border-radius: 50px;
+    animation: growBar 1.2s 0.5s ease both;
+  }
+  .progress-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* SECTION CARD */
+  .section-card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    padding: 28px 30px;
+    margin-bottom: 22px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .section-card:nth-child(2) { animation-delay: 0.1s; }
+  .section-card:nth-child(3) { animation-delay: 0.18s; }
+  .section-card:nth-child(4) { animation-delay: 0.25s; }
+  .section-card:nth-child(5) { animation-delay: 0.32s; }
+  .section-card:nth-child(6) { animation-delay: 0.38s; }
+  .section-card:nth-child(7) { animation-delay: 0.44s; }
+
+  .section-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title .icon {
+    font-size: 1.4rem;
+  }
+
+  p, li {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: #c5cae9;
+  }
+
+  /* Hinglish highlight */
+  .hi { color: var(--yellow); font-weight: 700; }
+  .code-word {
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(0,229,255,0.10);
+    color: var(--accent);
+    border-radius: 5px;
+    padding: 1px 7px;
+    font-size: 0.92em;
+  }
+  .eng { color: var(--accent2); font-weight: 700; }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: #090b14;
+    border: 1.5px solid rgba(0,229,255,0.10);
+    border-radius: 13px;
+    padding: 20px 22px;
+    margin: 16px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .code-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent3), var(--accent2));
+    border-radius: 13px 13px 0 0;
+  }
+  .code-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: block;
+  }
+  pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    white-space: pre;
+    overflow-x: auto;
+    color: #e8eaf6;
+  }
+  .c-comment { color: #4a5578; }
+  .c-keyword { color: #a259ff; font-weight: 700; }
+  .c-string { color: #00ffb2; }
+  .c-number { color: var(--accent2); }
+  .c-func { color: var(--accent); }
+  .c-var { color: var(--yellow); }
+
+  /* CONCEPT BOX */
+  .concept-box {
+    border-left: 4px solid var(--accent3);
+    background: rgba(162,89,255,0.07);
+    border-radius: 0 12px 12px 0;
+    padding: 14px 18px;
+    margin: 14px 0;
+  }
+  .concept-box.orange { border-color: var(--accent2); background: rgba(255,111,60,0.07); }
+  .concept-box.green { border-color: var(--green); background: rgba(0,255,178,0.06); }
+  .concept-box.yellow { border-color: var(--yellow); background: rgba(255,229,102,0.06); }
+
+  /* DATA TYPE CARDS */
+  .dtype-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 14px;
+  }
+  @media(max-width: 560px) { .dtype-grid { grid-template-columns: 1fr; } }
+
+  .dtype-card {
+    background: var(--card2);
+    border-radius: 13px;
+    padding: 16px 18px;
+    border: 1.5px solid rgba(255,255,255,0.06);
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: default;
+  }
+  .dtype-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+  .dtype-card .dtype-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .dtype-card .dtype-hindi {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .dtype-card .dtype-ex {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--green);
+    background: rgba(0,255,178,0.06);
+    border-radius: 6px;
+    padding: 3px 8px;
+    display: inline-block;
+  }
+  .dtype-card.t-str .dtype-name { color: var(--green); }
+  .dtype-card.t-int .dtype-name { color: var(--accent2); }
+  .dtype-card.t-float .dtype-name { color: var(--accent); }
+  .dtype-card.t-bool .dtype-name { color: var(--accent3); }
+
+  /* TIP BOX */
+  .tip-box {
+    background: linear-gradient(135deg, rgba(0,229,255,0.07), rgba(162,89,255,0.07));
+    border: 1.5px solid rgba(0,229,255,0.18);
+    border-radius: 13px;
+    padding: 16px 20px;
+    margin-top: 14px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .tip-box .tip-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: 2px; }
+  .tip-box .tip-text { font-size: 0.97rem; color: #b0bec5; line-height: 1.65; }
+
+  /* OUTPUT BOX */
+  .output-box {
+    background: #06080f;
+    border: 1.5px dashed rgba(0,255,178,0.2);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-top: 10px;
+  }
+  .output-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--green);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .output-box pre { color: var(--green); }
+
+  /* QUIZ */
+  .quiz-card {
+    background: linear-gradient(135deg, #1a1040, #0d1525);
+    border: 1.5px solid rgba(162,89,255,0.25);
+    border-radius: 18px;
+    padding: 26px 30px;
+    margin-bottom: 22px;
+  }
+  .quiz-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--accent3);
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .quiz-q {
+    font-size: 0.97rem;
+    color: #c5cae9;
+    margin-bottom: 12px;
+    line-height: 1.6;
+  }
+  .quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .quiz-opt {
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 11px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88rem;
+    color: #b0bec5;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+  }
+  .quiz-opt:hover { border-color: var(--accent3); color: var(--accent3); background: rgba(162,89,255,0.08); }
+  .quiz-opt.correct { border-color: var(--green); color: var(--green); background: rgba(0,255,178,0.08); }
+  .quiz-opt.wrong { border-color: var(--accent2); color: var(--accent2); background: rgba(255,111,60,0.08); }
+  .quiz-feedback { font-size: 0.9rem; margin-top: 8px; display: none; padding: 8px 14px; border-radius: 8px; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct-fb { background: rgba(0,255,178,0.08); color: var(--green); }
+  .quiz-feedback.wrong-fb { background: rgba(255,111,60,0.08); color: var(--accent2); }
+
+  /* SUMMARY */
+  .summary-card {
+    background: linear-gradient(135deg, #0f1c14, #0d0f1a);
+    border: 1.5px solid rgba(0,255,178,0.18);
+    border-radius: 18px;
+    padding: 26px 30px;
+    margin-bottom: 22px;
+  }
+  .summary-list { list-style: none; padding: 0; }
+  .summary-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.97rem;
+  }
+  .summary-list li:last-child { border: none; }
+  .check { color: var(--green); font-size: 1.1rem; }
+
+  /* NEXT MODULE */
+  .next-card {
+    background: linear-gradient(135deg, #13162a, #1a1040);
+    border: 1.5px solid rgba(0,229,255,0.18);
+    border-radius: 18px;
+    padding: 24px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .next-card .next-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .next-card .next-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text);
+  }
+  .next-btn {
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    color: #0d0f1a;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-family: 'Baloo 2', cursive;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .next-btn:hover { opacity: 0.88; transform: translateX(3px); }
+
+  /* ANIMATIONS */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes growBar {
+    from { width: 0%; }
+    to { width: 14%; }
+  }
+
+  hr.divider {
+    border: none;
+    border-top: 1.5px solid rgba(255,255,255,0.05);
+    margin: 22px 0;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="yt-header">
+    <div class="badge-row">
+      <span class="badge badge-cyan">Python for Cybersecurity</span>
+      <span class="badge badge-orange">Module 1 of 8</span>
+      <span class="badge badge-purple">English</span>
+    </div>
+    <h1>Variables & Data Types</h1>
+    <p class="subtitle">🎬 Beginner-friendly • Cybersecurity examples • Zero prior coding needed</p>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill"></div>
+    </div>
+    <span class="progress-label">Course progress: Module 1 / 8 complete</span>
+  </div>
+
+  <!-- WHAT IS A VARIABLE -->
+  <div class="section-card">
+    <div class="section-title"><span class="icon">🧠</span> What is a Variable?</div>
+    <p>
+      Let's understand this with a simple real-life analogy —<br><br>
+      Imagine you have a <span class="hi">box</span>. That box has a <span class="eng">name</span> on it, and something is stored <span class="eng">inside</span> it.<br><br>
+      <strong>A Variable = that box.</strong><br>
+      Whatever you put inside it — that is the <span class="code-word">value</span>.
+    </p>
+
+    <div class="concept-box yellow">
+      💡 <strong>Real Life Example:</strong><br>
+      <code style="color:var(--yellow)">target_ip = "192.168.1.1"</code><br><br>
+      This means — we stored an IP address inside a box named <span class="hi">target_ip</span>.<br>
+      Whenever we need that IP, we just write <span class="code-word">target_ip</span>.
+    </div>
+
+    <div class="code-block">
+      <span class="code-label">python – creating a variable</span>
+      <pre><span class="c-comment"># Creating a variable is super simple</span>
+<span class="c-comment"># name = value  — that's all you write</span>
+
+<span class="c-var">name</span> = <span class="c-string">"Hacker"</span>         <span class="c-comment"># stored "Hacker" in name</span>
+<span class="c-var">target_ip</span> = <span class="c-string">"192.168.1.1"</span>  <span class="c-comment"># stored an IP address</span>
+<span class="c-var">port</span> = <span class="c-number">8080</span>              <span class="c-comment"># stored a port number</span>
+
+<span class="c-func">print</span>(<span class="c-var">name</span>)        <span class="c-comment"># Output: Hacker</span>
+<span class="c-func">print</span>(<span class="c-var">target_ip</span>)   <span class="c-comment"># Output: 192.168.1.1</span>
+<span class="c-func">print</span>(<span class="c-var">port</span>)        <span class="c-comment"># Output: 8080</span></pre>
+    </div>
+
+    <div class="output-box">
+      <span class="output-label">⬇ output</span>
+      <pre>Hacker
+192.168.1.1
+8080</pre>
+    </div>
+
+    <div class="tip-box">
+      <span class="tip-icon">🎯</span>
+      <span class="tip-text">
+        <strong>Remember:</strong> In Python, you don't write the type when creating a variable — Python figures it out automatically! This is different from Java or C++.
+      </span>
+    </div>
+  </div>
+
+  <!-- DATA TYPES -->
+  <div class="section-card">
+    <div class="section-title"><span class="icon">📦</span> Data Types — 4 Types You Must Know Right Now</div>
+    <p>Every variable holds a specific <span class="hi">type</span> of value. Here are the 4 main types you need to learn right now:</p>
+
+    <div class="dtype-grid">
+      <div class="dtype-card t-str">
+        <div class="dtype-name">String</div>
+        <div class="dtype-hindi">Text / Characters — always in quotes</div>
+        <span class="dtype-ex">"hello" / "192.168.1.1"</span>
+      </div>
+      <div class="dtype-card t-int">
+        <div class="dtype-name">Integer</div>
+        <div class="dtype-hindi">Whole number — no decimal point</div>
+        <span class="dtype-ex">22 / 8080 / 404</span>
+      </div>
+      <div class="dtype-card t-float">
+        <div class="dtype-name">Float</div>
+        <div class="dtype-hindi">Decimal number — has a dot</div>
+        <span class="dtype-ex">3.14 / 99.5 / 2.0</span>
+      </div>
+      <div class="dtype-card t-bool">
+        <div class="dtype-name">Boolean</div>
+        <div class="dtype-hindi">Only two values — yes or no</div>
+        <span class="dtype-ex">True / False</span>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="code-block">
+      <span class="code-label">python – see all data types</span>
+      <pre><span class="c-comment"># STRING — text always goes inside quotes</span>
+<span class="c-var">hacker_name</span> = <span class="c-string">"Anonymous"</span>
+<span class="c-var">target_ip</span>   = <span class="c-string">"10.10.10.5"</span>
+<span class="c-var">os_name</span>     = <span class="c-string">"Kali Linux"</span>
+
+<span class="c-comment"># INTEGER — whole numbers, no quotes</span>
+<span class="c-var">ssh_port</span>    = <span class="c-number">22</span>
+<span class="c-var">http_port</span>   = <span class="c-number">80</span>
+<span class="c-var">total_ports</span> = <span class="c-number">65535</span>
+
+<span class="c-comment"># FLOAT — decimal numbers</span>
+<span class="c-var">python_ver</span>  = <span class="c-number">3.11</span>
+<span class="c-var">risk_score</span>  = <span class="c-number">9.8</span>   <span class="c-comment"># CVE severity scores look like this</span>
+
+<span class="c-comment"># BOOLEAN — only True or False (capital T/F)</span>
+<span class="c-var">is_port_open</span>   = <span class="c-keyword">True</span>
+<span class="c-var">is_admin</span>       = <span class="c-keyword">False</span>
+<span class="c-var">firewall_active</span> = <span class="c-keyword">True</span></pre>
+    </div>
+
+    <div class="concept-box orange">
+      ⚠️ <strong>Common Mistake — Never Do This:</strong><br><br>
+      <code style="color:var(--accent2)">port = "22"</code> &nbsp;❌ — This is a String, not a number!<br>
+      <code style="color:var(--green)">port = 22</code> &nbsp;&nbsp;&nbsp;✅ — This is the correct Integer<br><br>
+      If you wrap a number in quotes, it becomes text. This will cause errors later when you try to do math with it!
+    </div>
+  </div>
+
+  <!-- PRINT FUNCTION -->
+  <div class="section-card">
+    <div class="section-title"><span class="icon">🖨️</span> print() — Your Very First Best Friend</div>
+    <p>
+      With <span class="code-word">print()</span> we can display anything on the screen. It is the most basic and essential function in Python.
+    </p>
+
+    <div class="code-block">
+      <span class="code-label">python – 3 ways to use print</span>
+      <pre><span class="c-var">ip</span> = <span class="c-string">"192.168.1.1"</span>
+<span class="c-var">port</span> = <span class="c-number">22</span>
+
+<span class="c-comment"># Method 1: print plain text directly</span>
+<span class="c-func">print</span>(<span class="c-string">"Scanning started..."</span>)
+
+<span class="c-comment"># Method 2: print a variable</span>
+<span class="c-func">print</span>(<span class="c-var">ip</span>)
+
+<span class="c-comment"># Method 3: f-string — THE BEST METHOD ✅</span>
+<span class="c-func">print</span>(<span class="c-string">f"Target IP: <span class="c-var">{ip}</span> | Port: <span class="c-var">{port}</span>"</span>)</pre>
+    </div>
+
+    <div class="output-box">
+      <span class="output-label">⬇ output</span>
+      <pre>Scanning started...
+192.168.1.1
+Target IP: 192.168.1.1 | Port: 22</pre>
+    </div>
+
+    <div class="concept-box green">
+      🌟 <strong>What is an f-string?</strong><br><br>
+      In an f-string, you can embed variables directly inside curly brackets <span class="code-word">{}</span>!<br>
+      It's the cleanest and most professional way to format output — this is what real developers and security engineers use.
+    </div>
+  </div>
+
+  <!-- TYPE CHECK -->
+  <div class="section-card">
+    <div class="section-title"><span class="icon">🔍</span> type() — How to Check a Variable's Type?</div>
+    <p>If you're ever unsure what type a variable is — use <span class="code-word">type()</span>.</p>
+
+    <div class="code-block">
+      <span class="code-label">python – check the type</span>
+      <pre><span class="c-var">name</span>     = <span class="c-string">"Hacker"</span>
+<span class="c-var">port</span>     = <span class="c-number">22</span>
+<span class="c-var">version</span>  = <span class="c-number">3.11</span>
+<span class="c-var">is_open</span>  = <span class="c-keyword">True</span>
+
+<span class="c-func">print</span>(<span class="c-func">type</span>(<span class="c-var">name</span>))     <span class="c-comment"># &lt;class 'str'&gt;</span>
+<span class="c-func">print</span>(<span class="c-func">type</span>(<span class="c-var">port</span>))     <span class="c-comment"># &lt;class 'int'&gt;</span>
+<span class="c-func">print</span>(<span class="c-func">type</span>(<span class="c-var">version</span>))  <span class="c-comment"># &lt;class 'float'&gt;</span>
+<span class="c-func">print</span>(<span class="c-func">type</span>(<span class="c-var">is_open</span>))  <span class="c-comment"># &lt;class 'bool'&gt;</span></pre>
+    </div>
+
+    <div class="tip-box">
+      <span class="tip-icon">💻</span>
+      <span class="tip-text">
+        <strong>Do it now:</strong> Open your Linux terminal, type <span class="code-word">python3</span>, and enter this code line by line to see the output live. Hands-on practice is real learning!
+      </span>
+    </div>
+  </div>
+
+  <!-- MINI PROJECT -->
+  <div class="section-card">
+    <div class="section-title"><span class="icon">🛠️</span> Mini Project — Build Your First Hacker Info Card!</div>
+    <p>Let's put everything together and build a small <span class="hi">Hacker Info Card</span> using all the concepts we just learned:</p>
+
+    <div class="code-block">
+      <span class="code-label">python – hacker_info_card.py</span>
+      <pre><span class="c-comment"># ===== Hacker Info Card =====</span>
+
+<span class="c-var">hacker_name</span>  = <span class="c-string">"Anonymous"</span>
+<span class="c-var">target_ip</span>    = <span class="c-string">"10.10.10.5"</span>
+<span class="c-var">target_port</span>  = <span class="c-number">22</span>
+<span class="c-var">os_used</span>      = <span class="c-string">"Kali Linux"</span>
+<span class="c-var">python_ver</span>   = <span class="c-number">3.11</span>
+<span class="c-var">is_vpn_on</span>    = <span class="c-keyword">True</span>
+
+<span class="c-func">print</span>(<span class="c-string">"=" * 35</span>)
+<span class="c-func">print</span>(<span class="c-string">"     🛡️  HACKER INFO CARD  🛡️"</span>)
+<span class="c-func">print</span>(<span class="c-string">"=" * 35</span>)
+<span class="c-func">print</span>(<span class="c-string">f"  Name      : <span class="c-var">{hacker_name}</span>"</span>)
+<span class="c-func">print</span>(<span class="c-string">f"  Target IP : <span class="c-var">{target_ip}</span>"</span>)
+<span class="c-func">print</span>(<span class="c-string">f"  Port      : <span class="c-var">{target_port}</span>"</span>)
+<span class="c-func">print</span>(<span class="c-string">f"  OS        : <span class="c-var">{os_used}</span>"</span>)
+<span class="c-func">print</span>(<span class="c-string">f"  Python    : <span class="c-var">{python_ver}</span>"</span>)
+<span class="c-func">print</span>(<span class="c-string">f"  VPN       : <span class="c-var">{is_vpn_on}</span>"</span>)
+<span class="c-func">print</span>(<span class="c-string">"=" * 35</span>)</pre>
+    </div>
+
+    <div class="output-box">
+      <span class="output-label">⬇ output</span>
+      <pre>===================================
+     🛡️  HACKER INFO CARD  🛡️
+===================================
+  Name      : Anonymous
+  Target IP : 10.10.10.5
+  Port      : 22
+  OS        : Kali Linux
+  Python    : 3.11
+  VPN       : True
+===================================</pre>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-card">
+    <div class="quiz-title">🧩 Quick Quiz — Test Your Module 1 Knowledge!</div>
+
+    <div class="quiz-q">❓ <strong>Q1.</strong> What data type will this variable be? &nbsp;<span class="code-word">x = "443"</span></div>
+    <div class="quiz-options" id="q1">
+      <button class="quiz-opt" onclick="checkAnswer(this, false, 'q1-fb', '443 is inside quotes, so it is a String — not an Integer!')">Integer</button>
+      <button class="quiz-opt" onclick="checkAnswer(this, true, 'q1-fb', 'Correct! Anything inside quotes becomes a String — even if it looks like a number.')">String ✅</button>
+      <button class="quiz-opt" onclick="checkAnswer(this, false, 'q1-fb', 'Nope! Float has a decimal point. This is a number in quotes — so it is a String.')">Float</button>
+    </div>
+    <div class="quiz-feedback" id="q1-fb"></div>
+
+    <hr class="divider">
+
+    <div class="quiz-q">❓ <strong>Q2.</strong> <span class="code-word">is_admin = True</span> — what data type is this?</div>
+    <div class="quiz-options" id="q2">
+      <button class="quiz-opt" onclick="checkAnswer(this, false, 'q2-fb', 'String is for text. True/False are not text!')">String</button>
+      <button class="quiz-opt" onclick="checkAnswer(this, false, 'q2-fb', 'Integer is for numbers — not for True/False values.')">Integer</button>
+      <button class="quiz-opt" onclick="checkAnswer(this, true, 'q2-fb', 'Exactly right! True and False are both Boolean values. Always capitalize the T and F!')">Boolean ✅</button>
+    </div>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="summary-card">
+    <div class="section-title"><span class="icon">✅</span> Module 1 — Summary</div>
+    <ul class="summary-list">
+      <li><span class="check">✅</span> A Variable = a box that stores data</li>
+      <li><span class="check">✅</span> In Python you don't declare types — Python figures it out automatically</li>
+      <li><span class="check">✅</span> <strong>String</strong> = text in quotes | <strong>Integer</strong> = whole number</li>
+      <li><span class="check">✅</span> <strong>Float</strong> = decimal number | <strong>Boolean</strong> = True or False</li>
+      <li><span class="check">✅</span> <span class="code-word">print()</span> is used to display output on screen</li>
+      <li><span class="check">✅</span> f-strings are the cleanest way to print variables</li>
+      <li><span class="check">✅</span> <span class="code-word">type()</span> lets you check what type a variable is</li>
+    </ul>
+  </div>
+
+  <!-- NEXT MODULE -->
+  <div class="next-card">
+    <div>
+      <div class="next-label">Coming Up Next</div>
+      <div class="next-title">📝 Module 2 — Strings & Their Powers (split, join, find...)</div>
+      <p style="font-size:0.88rem; color:var(--muted); margin-top:4px;">Learn to manipulate IP addresses — used constantly in real hacking scripts!</p>
+    </div>
+    <button class="next-btn">Module 2 →</button>
+  </div>
+
+</div>
+
+<script>
+function checkAnswer(btn, isCorrect, feedbackId, msg) {
+  const parent = btn.parentElement;
+  const allBtns = parent.querySelectorAll('.quiz-opt');
+  allBtns.forEach(b => b.style.pointerEvents = 'none');
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+
+  const fb = document.getElementById(feedbackId);
+  fb.textContent = (isCorrect ? '🎉 Correct! ' : '❌ Wrong! ') + msg;
+  fb.className = 'quiz-feedback show ' + (isCorrect ? 'correct-fb' : 'wrong-fb');
+}
+</script>
+</body>
+</html>
