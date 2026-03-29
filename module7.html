@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Module 7 – Sockets & Networking | Cybersecurity</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d0f1a;--card:#13162a;--card2:#181c30;--accent:#00e5ff;--accent2:#ff6f3c;--accent3:#a259ff;--green:#00ffb2;--yellow:#ffe566;--text:#e8eaf6;--muted:#7b82a8;--border:rgba(0,229,255,0.13);}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(0,229,255,0.08) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 20% 80%,rgba(0,255,178,0.05) 0%,transparent 70%);pointer-events:none;z-index:0;}
+  .container{max-width:860px;margin:0 auto;padding:40px 20px 80px;position:relative;z-index:1;}
+  .yt-header{background:linear-gradient(135deg,#091420 0%,#13162a 100%);border:1.5px solid rgba(0,229,255,0.25);border-radius:20px;padding:36px 36px 28px;margin-bottom:32px;position:relative;overflow:hidden;animation:fadeDown 0.7s ease both;}
+  .yt-header::after{content:'🌐';position:absolute;right:32px;top:24px;font-size:72px;opacity:0.13;pointer-events:none;}
+  .badge-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .badge{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-radius:50px;border:1.5px solid;}
+  .badge-cyan{color:var(--accent);border-color:var(--accent);background:rgba(0,229,255,0.07);}
+  .badge-orange{color:var(--accent2);border-color:var(--accent2);background:rgba(255,111,60,0.07);}
+  .badge-glow{color:var(--accent);border-color:var(--accent);background:rgba(0,229,255,0.12);box-shadow:0 0 10px rgba(0,229,255,0.2);}
+  .yt-header h1{font-family:'Baloo 2',cursive;font-size:2.3rem;font-weight:800;line-height:1.2;margin-bottom:10px;background:linear-gradient(90deg,var(--accent),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .yt-header .subtitle{font-size:1rem;color:var(--muted);font-weight:600;margin-bottom:18px;}
+  .progress-bar-wrap{background:rgba(255,255,255,0.07);border-radius:50px;height:6px;overflow:hidden;margin-bottom:6px;}
+  .progress-bar-fill{height:100%;width:98%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:50px;animation:growBar 1.2s 0.5s ease both;}
+  .progress-label{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+  .section-card{background:var(--card);border:1.5px solid var(--border);border-radius:18px;padding:28px 30px;margin-bottom:22px;animation:fadeUp 0.6s ease both;}
+  .section-card:nth-child(2){animation-delay:0.08s;}.section-card:nth-child(3){animation-delay:0.15s;}.section-card:nth-child(4){animation-delay:0.22s;}.section-card:nth-child(5){animation-delay:0.29s;}.section-card:nth-child(6){animation-delay:0.36s;}
+  .section-title{font-family:'Baloo 2',cursive;font-size:1.25rem;font-weight:800;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+  p,li{font-size:1rem;line-height:1.75;color:#c5cae9;}
+  .hi{color:var(--yellow);font-weight:700;}.eng{color:var(--accent2);font-weight:700;}
+  .code-word{font-family:'JetBrains Mono',monospace;background:rgba(0,229,255,0.10);color:var(--accent);border-radius:5px;padding:1px 7px;font-size:0.92em;}
+  .code-block{background:#090b14;border:1.5px solid rgba(0,229,255,0.12);border-radius:13px;padding:20px 22px;margin:16px 0;position:relative;overflow:hidden;}
+  .code-block::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--green),var(--accent3));border-radius:13px 13px 0 0;}
+  .code-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:block;}
+  pre{font-family:'JetBrains Mono',monospace;font-size:0.9rem;line-height:1.8;white-space:pre;overflow-x:auto;color:#e8eaf6;}
+  .c-comment{color:#4a5578;}.c-keyword{color:#a259ff;font-weight:700;}.c-string{color:#00ffb2;}.c-number{color:var(--accent2);}.c-func{color:var(--accent);}.c-var{color:var(--yellow);}.c-method{color:#ff9de2;}.c-exc{color:#ff5c5c;font-weight:700;}
+  .concept-box{border-left:4px solid var(--accent);background:rgba(0,229,255,0.06);border-radius:0 12px 12px 0;padding:14px 18px;margin:14px 0;}
+  .concept-box.orange{border-color:var(--accent2);background:rgba(255,111,60,0.07);}
+  .concept-box.green{border-color:var(--green);background:rgba(0,255,178,0.06);}
+  .concept-box.purple{border-color:var(--accent3);background:rgba(162,89,255,0.07);}
+  .tip-box{background:linear-gradient(135deg,rgba(0,229,255,0.07),rgba(0,255,178,0.05));border:1.5px solid rgba(0,229,255,0.2);border-radius:13px;padding:16px 20px;margin-top:14px;display:flex;gap:12px;align-items:flex-start;}
+  .tip-icon{font-size:1.5rem;flex-shrink:0;margin-top:2px;}.tip-text{font-size:0.97rem;color:#b0bec5;line-height:1.65;}
+  .output-box{background:#06080f;border:1.5px dashed rgba(0,255,178,0.2);border-radius:10px;padding:14px 18px;margin-top:10px;}
+  .output-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;display:block;}
+  .output-box pre{color:var(--green);}
+  /* socket flow */
+  .socket-flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:16px 0;justify-content:center;}
+  .sf-box{background:var(--card2);border:1.5px solid rgba(0,229,255,0.2);border-radius:12px;padding:12px 18px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:0.82rem;color:var(--accent);}
+  .sf-box .sf-num{font-size:1.2rem;margin-bottom:4px;}
+  .sf-arrow{color:var(--muted);font-size:1.2rem;}
+  .quiz-card{background:linear-gradient(135deg,#1a1040,#0d1525);border:1.5px solid rgba(162,89,255,0.25);border-radius:18px;padding:26px 30px;margin-bottom:22px;}
+  .quiz-title{font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:800;color:var(--accent3);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+  .quiz-q{font-size:0.97rem;color:#c5cae9;margin-bottom:12px;line-height:1.6;}
+  .quiz-options{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+  .quiz-opt{background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);border-radius:10px;padding:11px 16px;font-family:'JetBrains Mono',monospace;font-size:0.88rem;color:#b0bec5;cursor:pointer;transition:all 0.2s;text-align:left;}
+  .quiz-opt:hover{border-color:var(--accent3);color:var(--accent3);background:rgba(162,89,255,0.08);}
+  .quiz-opt.correct{border-color:var(--green);color:var(--green);background:rgba(0,255,178,0.08);}
+  .quiz-opt.wrong{border-color:var(--accent2);color:var(--accent2);background:rgba(255,111,60,0.08);}
+  .quiz-feedback{font-size:0.9rem;margin-top:8px;display:none;padding:8px 14px;border-radius:8px;}
+  .quiz-feedback.show{display:block;}.quiz-feedback.correct-fb{background:rgba(0,255,178,0.08);color:var(--green);}.quiz-feedback.wrong-fb{background:rgba(255,111,60,0.08);color:var(--accent2);}
+  .summary-card{background:linear-gradient(135deg,#0f1c14,#0d0f1a);border:1.5px solid rgba(0,255,178,0.18);border-radius:18px;padding:26px 30px;margin-bottom:22px;}
+  .summary-list{list-style:none;padding:0;}
+  .summary-list li{padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;gap:10px;font-size:0.97rem;}
+  .summary-list li:last-child{border:none;}.check{color:var(--green);font-size:1.1rem;}
+  .next-card{background:linear-gradient(135deg,#13162a,#1a1040);border:1.5px solid rgba(0,229,255,0.18);border-radius:18px;padding:24px 30px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;}
+  .next-label{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
+  .next-title{font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:800;color:var(--text);}
+  .next-btn{background:linear-gradient(135deg,var(--accent),var(--green));color:#0d0f1a;border:none;border-radius:10px;padding:12px 24px;font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;cursor:pointer;white-space:nowrap;transition:opacity 0.2s,transform 0.2s;}
+  .next-btn:hover{opacity:0.88;transform:translateX(3px);}
+  hr.divider{border:none;border-top:1.5px solid rgba(255,255,255,0.05);margin:22px 0;}
+  @keyframes fadeDown{from{opacity:0;transform:translateY(-24px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes growBar{from{width:0%;}to{width:98%;}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="yt-header">
+    <div class="badge-row">
+      <span class="badge badge-cyan">Python for Cybersecurity</span>
+      <span class="badge badge-orange">Module 7 of 8</span>
+      <span class="badge badge-glow">★ Core Module</span>
+    </div>
+    <h1>Sockets & Networking</h1>
+    <p class="subtitle">🌐 Build a REAL port scanner — the heart of every network security tool</p>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill"></div></div>
+    <span class="progress-label">Course progress: Module 7 / 8 complete</span>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title"><span class="icon">🔌</span> What is a Socket?</div>
+    <p>A <span class="hi">socket</span> is an endpoint for network communication — like a phone. One side dials (connects), the other picks up (listens). Every network connection in computing uses sockets underneath — browsers, SSH, Nmap, everything.</p>
+    <div class="socket-flow">
+      <div class="sf-box"><div class="sf-num">1️⃣</div>Create socket</div>
+      <div class="sf-arrow">→</div>
+      <div class="sf-box"><div class="sf-num">2️⃣</div>Set timeout</div>
+      <div class="sf-arrow">→</div>
+      <div class="sf-box"><div class="sf-num">3️⃣</div>Connect to IP:port</div>
+      <div class="sf-arrow">→</div>
+      <div class="sf-box"><div class="sf-num">4️⃣</div>Check result</div>
+      <div class="sf-arrow">→</div>
+      <div class="sf-box"><div class="sf-num">5️⃣</div>Close socket</div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title"><span class="icon">📡</span> Your First Socket — Single Port Check</div>
+    <div class="code-block">
+      <span class="code-label">python – single port check</span>
+      <pre><span class="c-keyword">import</span> <span class="c-var">socket</span>
+
+<span class="c-keyword">def</span> <span class="c-func">check_port</span>(<span class="c-var">ip</span>, <span class="c-var">port</span>):
+    <span class="c-comment"># Create a TCP socket (AF_INET=IPv4, SOCK_STREAM=TCP)</span>
+    <span class="c-var">s</span> = <span class="c-var">socket</span>.<span class="c-func">socket</span>(<span class="c-var">socket</span>.<span class="c-var">AF_INET</span>, <span class="c-var">socket</span>.<span class="c-var">SOCK_STREAM</span>)
+
+    <span class="c-comment"># Set timeout — don't wait forever</span>
+    <span class="c-var">s</span>.<span class="c-method">settimeout</span>(<span class="c-number">1</span>)
+
+    <span class="c-keyword">try</span>:
+        <span class="c-comment"># Try to connect — returns 0 if open</span>
+        <span class="c-var">result</span> = <span class="c-var">s</span>.<span class="c-method">connect_ex</span>((<span class="c-var">ip</span>, <span class="c-var">port</span>))
+        <span class="c-keyword">if</span> <span class="c-var">result</span> == <span class="c-number">0</span>:
+            <span class="c-keyword">return</span> <span class="c-keyword">True</span>   <span class="c-comment"># Port is OPEN</span>
+        <span class="c-keyword">else</span>:
+            <span class="c-keyword">return</span> <span class="c-keyword">False</span>  <span class="c-comment"># Port is CLOSED</span>
+    <span class="c-keyword">except</span> <span class="c-exc">Exception</span>:
+        <span class="c-keyword">return</span> <span class="c-keyword">False</span>
+    <span class="c-keyword">finally</span>:
+        <span class="c-var">s</span>.<span class="c-method">close</span>()      <span class="c-comment"># always close the socket!</span>
+
+<span class="c-comment"># Test it</span>
+<span class="c-var">ip</span> = <span class="c-string">"scanme.nmap.org"</span>   <span class="c-comment"># Nmap's legal test server</span>
+<span class="c-keyword">if</span> <span class="c-func">check_port</span>(<span class="c-var">ip</span>, <span class="c-number">80</span>):
+    <span class="c-func">print</span>(<span class="c-string">f"Port 80 is OPEN on {<span class="c-var">ip</span>}"</span>)
+<span class="c-keyword">else</span>:
+    <span class="c-func">print</span>(<span class="c-string">f"Port 80 is CLOSED on {<span class="c-var">ip</span>}"</span>)</pre>
+    </div>
+    <div class="concept-box green">
+      🎯 <strong>connect_ex() vs connect():</strong> Use <code style="color:var(--green)">connect_ex()</code> for port scanning — it returns an error code (0=open) instead of throwing an exception. Much cleaner for scanning loops!
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title"><span class="icon">🔍</span> Banner Grabbing — What Service is Running?</div>
+    <p>After connecting, some services send a <span class="hi">banner</span> — identifying text that reveals the service name and version. This is called banner grabbing and is a key recon technique.</p>
+    <div class="code-block">
+      <span class="code-label">python – banner grabbing</span>
+      <pre><span class="c-keyword">import</span> <span class="c-var">socket</span>
+
+<span class="c-keyword">def</span> <span class="c-func">grab_banner</span>(<span class="c-var">ip</span>, <span class="c-var">port</span>):
+    <span class="c-keyword">try</span>:
+        <span class="c-var">s</span> = <span class="c-var">socket</span>.<span class="c-func">socket</span>()
+        <span class="c-var">s</span>.<span class="c-method">settimeout</span>(<span class="c-number">2</span>)
+        <span class="c-var">s</span>.<span class="c-method">connect</span>((<span class="c-var">ip</span>, <span class="c-var">port</span>))
+
+        <span class="c-comment"># Send a generic HTTP request</span>
+        <span class="c-var">s</span>.<span class="c-method">send</span>(<span class="c-string">b"HEAD / HTTP/1.0\r\n\r\n"</span>)
+
+        <span class="c-comment"># Receive up to 1024 bytes</span>
+        <span class="c-var">banner</span> = <span class="c-var">s</span>.<span class="c-method">recv</span>(<span class="c-number">1024</span>).<span class="c-method">decode</span>(<span class="c-string">"utf-8"</span>, <span class="c-var">errors</span>=<span class="c-string">"ignore"</span>)
+        <span class="c-var">s</span>.<span class="c-method">close</span>()
+        <span class="c-keyword">return</span> <span class="c-var">banner</span>.<span class="c-method">strip</span>()
+    <span class="c-keyword">except</span> <span class="c-exc">Exception</span>:
+        <span class="c-keyword">return</span> <span class="c-string">"No banner"</span>
+
+<span class="c-var">banner</span> = <span class="c-func">grab_banner</span>(<span class="c-string">"scanme.nmap.org"</span>, <span class="c-number">80</span>)
+<span class="c-func">print</span>(<span class="c-string">f"Banner: {<span class="c-var">banner</span>[:100]}"</span>)</pre>
+    </div>
+    <div class="output-box">
+      <span class="output-label">⬇ example output</span>
+      <pre>Banner: HTTP/1.1 200 OK
+Server: Apache/2.4.7 (Ubuntu)
+Date: Mon, 25 Mar 2026 10:00:00 GMT</pre>
+    </div>
+    <div class="tip-box">
+      <span class="tip-icon">🕵️</span>
+      <span class="tip-text"><strong>Why this matters:</strong> "Apache/2.4.7" tells you exactly which web server version is running. You can then look up known CVEs (vulnerabilities) for that exact version. This is step 1 of real recon!</span>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title"><span class="icon">🛡️</span> Mini Project — Full Port Scanner</div>
+    <p>Putting everything together — a complete port scanner with banner grabbing, service ID, and file output:</p>
+    <div class="code-block">
+      <span class="code-label">python – port_scanner.py (your first real tool!)</span>
+      <pre><span class="c-keyword">import</span> <span class="c-var">socket</span>, <span class="c-var">sys</span>, <span class="c-var">os</span>
+<span class="c-keyword">from</span> <span class="c-var">datetime</span> <span class="c-keyword">import</span> <span class="c-var">datetime</span>
+
+<span class="c-var">SERVICES</span> = {
+    <span class="c-number">21</span>:<span class="c-string">"FTP"</span>, <span class="c-number">22</span>:<span class="c-string">"SSH"</span>, <span class="c-number">23</span>:<span class="c-string">"Telnet"</span>,
+    <span class="c-number">25</span>:<span class="c-string">"SMTP"</span>, <span class="c-number">53</span>:<span class="c-string">"DNS"</span>, <span class="c-number">80</span>:<span class="c-string">"HTTP"</span>,
+    <span class="c-number">110</span>:<span class="c-string">"POP3"</span>, <span class="c-number">143</span>:<span class="c-string">"IMAP"</span>, <span class="c-number">443</span>:<span class="c-string">"HTTPS"</span>,
+    <span class="c-number">3306</span>:<span class="c-string">"MySQL"</span>, <span class="c-number">5432</span>:<span class="c-string">"PostgreSQL"</span>, <span class="c-number">8080</span>:<span class="c-string">"HTTP-Alt"</span>
+}
+
+<span class="c-keyword">def</span> <span class="c-func">scan_port</span>(<span class="c-var">ip</span>, <span class="c-var">port</span>, <span class="c-var">timeout</span>=<span class="c-number">0.5</span>):
+    <span class="c-keyword">try</span>:
+        <span class="c-var">s</span> = <span class="c-var">socket</span>.<span class="c-func">socket</span>(<span class="c-var">socket</span>.<span class="c-var">AF_INET</span>, <span class="c-var">socket</span>.<span class="c-var">SOCK_STREAM</span>)
+        <span class="c-var">s</span>.<span class="c-method">settimeout</span>(<span class="c-var">timeout</span>)
+        <span class="c-var">result</span> = <span class="c-var">s</span>.<span class="c-method">connect_ex</span>((<span class="c-var">ip</span>, <span class="c-var">port</span>))
+        <span class="c-var">s</span>.<span class="c-method">close</span>()
+        <span class="c-keyword">return</span> <span class="c-var">result</span> == <span class="c-number">0</span>
+    <span class="c-keyword">except</span>:
+        <span class="c-keyword">return</span> <span class="c-keyword">False</span>
+
+<span class="c-keyword">def</span> <span class="c-func">run_scanner</span>(<span class="c-var">ip</span>, <span class="c-var">start</span>, <span class="c-var">end</span>):
+    <span class="c-var">open_ports</span> = []
+    <span class="c-var">ts</span> = <span class="c-var">datetime</span>.<span class="c-method">now</span>().<span class="c-method">strftime</span>(<span class="c-string">"%Y-%m-%d %H:%M:%S"</span>)
+
+    <span class="c-func">print</span>(<span class="c-string">f"\n{'='*48}"</span>)
+    <span class="c-func">print</span>(<span class="c-string">f"  🔍 PORT SCANNER  |  Target: {<span class="c-var">ip</span>}"</span>)
+    <span class="c-func">print</span>(<span class="c-string">f"  Ports: {<span class="c-var">start</span>}-{<span class="c-var">end</span>}  |  Time: {<span class="c-var">ts</span>}"</span>)
+    <span class="c-func">print</span>(<span class="c-string">f"{'='*48}"</span>)
+
+    <span class="c-keyword">for</span> <span class="c-var">port</span> <span class="c-keyword">in</span> <span class="c-func">range</span>(<span class="c-var">start</span>, <span class="c-var">end</span> + <span class="c-number">1</span>):
+        <span class="c-func">print</span>(<span class="c-string">f"  Checking {<span class="c-var">port</span>:5}..."</span>, <span class="c-var">end</span>=<span class="c-string">""</span>, <span class="c-var">flush</span>=<span class="c-keyword">True</span>)
+        <span class="c-keyword">if</span> <span class="c-func">scan_port</span>(<span class="c-var">ip</span>, <span class="c-var">port</span>):
+            <span class="c-var">svc</span> = <span class="c-var">SERVICES</span>.<span class="c-method">get</span>(<span class="c-var">port</span>, <span class="c-string">"Unknown"</span>)
+            <span class="c-func">print</span>(<span class="c-string">f" ✅ OPEN  → {<span class="c-var">svc</span>}"</span>)
+            <span class="c-var">open_ports</span>.<span class="c-method">append</span>((<span class="c-var">port</span>, <span class="c-var">svc</span>))
+        <span class="c-keyword">else</span>:
+            <span class="c-func">print</span>(<span class="c-string">" ❌ closed"</span>)
+
+    <span class="c-func">print</span>(<span class="c-string">f"\n{'='*48}"</span>)
+    <span class="c-func">print</span>(<span class="c-string">f"  Open ports found: {<span class="c-func">len</span>(<span class="c-var">open_ports</span>)}"</span>)
+    <span class="c-keyword">for</span> <span class="c-var">p</span>, <span class="c-var">s</span> <span class="c-keyword">in</span> <span class="c-var">open_ports</span>:
+        <span class="c-func">print</span>(<span class="c-string">f"    → Port {<span class="c-var">p</span>} ({<span class="c-var">s</span>})"</span>)
+    <span class="c-func">print</span>(<span class="c-string">f"{'='*48}\n"</span>)
+    <span class="c-keyword">return</span> <span class="c-var">open_ports</span>
+
+<span class="c-comment"># Scan ports 1-100 on localhost</span>
+<span class="c-func">run_scanner</span>(<span class="c-string">"127.0.0.1"</span>, <span class="c-number">1</span>, <span class="c-number">100</span>)</pre>
+    </div>
+    <div class="output-box">
+      <span class="output-label">⬇ sample output</span>
+      <pre>================================================
+  🔍 PORT SCANNER  |  Target: 127.0.0.1
+  Ports: 1-100     |  Time: 2026-03-25 12:00:00
+================================================
+  Checking    22... ✅ OPEN  → SSH
+  Checking    80... ✅ OPEN  → HTTP
+  Checking    25... ❌ closed
+  ...
+================================================
+  Open ports found: 2
+    → Port 22 (SSH)
+    → Port 80 (HTTP)
+================================================</pre>
+    </div>
+    <div class="concept-box orange">
+      ⚠️ <strong>Legal Warning:</strong> Only scan systems you OWN or have explicit written permission to scan. Scanning without permission is illegal in most countries. Use <strong>scanme.nmap.org</strong> (Nmap's free legal test server) or your own lab VMs.
+    </div>
+  </div>
+
+  <div class="quiz-card">
+    <div class="quiz-title">🧩 Quick Quiz — Module 7</div>
+    <div class="quiz-q">❓ <strong>Q1.</strong> What does <span class="code-word">connect_ex()</span> return when a port is OPEN?</div>
+    <div class="quiz-options" id="q1">
+      <button class="quiz-opt" onclick="checkAnswer(this,true,'q1-fb','Correct! connect_ex returns 0 for success (open) and non-zero error codes for closed/filtered ports.')">0 ✅</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,false,'q1-fb','1 means error — port is closed or filtered.')">1</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,false,'q1-fb','connect_ex returns an integer, not True/False directly.')">True</button>
+    </div>
+    <div class="quiz-feedback" id="q1-fb"></div>
+    <hr class="divider">
+    <div class="quiz-q">❓ <strong>Q2.</strong> Why do we call <span class="code-word">s.settimeout(1)</span> before connecting?</div>
+    <div class="quiz-options" id="q2">
+      <button class="quiz-opt" onclick="checkAnswer(this,false,'q2-fb','Timeout does not encrypt anything.')">To encrypt the connection</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,true,'q2-fb','Exactly! Without a timeout, your scanner would hang indefinitely on filtered/firewalled ports. 1 second is a common balance between speed and accuracy.')">So the scanner does not hang on closed ports ✅</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,false,'q2-fb','Timeout controls how long to wait, not which ports to scan.')">To select which ports to scan</button>
+    </div>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <div class="summary-card">
+    <div class="section-title"><span class="icon">✅</span> Module 7 — Summary</div>
+    <ul class="summary-list">
+      <li><span class="check">✅</span> A socket is a network endpoint — Python's <span class="code-word">socket</span> module gives you full control</li>
+      <li><span class="check">✅</span> <span class="code-word">socket.AF_INET + SOCK_STREAM</span> = TCP/IPv4 connection</li>
+      <li><span class="check">✅</span> <span class="code-word">connect_ex()</span> returns 0 if open — perfect for scanning loops</li>
+      <li><span class="check">✅</span> Always <span class="code-word">settimeout()</span> — prevents hanging on filtered ports</li>
+      <li><span class="check">✅</span> Banner grabbing = receive service info to identify versions</li>
+      <li><span class="check">✅</span> Always <span class="code-word">s.close()</span> in finally — clean up your connections</li>
+    </ul>
+  </div>
+
+  <div class="next-card">
+    <div>
+      <div class="next-label">Final Module</div>
+      <div class="next-title">🎓 Module 8 — Requests Library & Web Recon</div>
+      <p style="font-size:0.88rem;color:var(--muted);margin-top:4px;">HTTP requests, web scraping, header analysis — the last piece of your Python hacker toolkit!</p>
+    </div>
+    <button class="next-btn">Module 8 →</button>
+  </div>
+</div>
+<script>
+function checkAnswer(btn,isCorrect,feedbackId,msg){
+  btn.parentElement.querySelectorAll('.quiz-opt').forEach(b=>b.style.pointerEvents='none');
+  btn.classList.add(isCorrect?'correct':'wrong');
+  const fb=document.getElementById(feedbackId);
+  fb.textContent=(isCorrect?'🎉 Correct! ':'❌ Wrong! ')+msg;
+  fb.className='quiz-feedback show '+(isCorrect?'correct-fb':'wrong-fb');
+}
+</script>
+</body>
+</html>

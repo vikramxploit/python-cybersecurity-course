@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Module 4 – Functions & Dictionaries | Cybersecurity</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d0f1a;--card:#13162a;--card2:#181c30;--accent:#00e5ff;--accent2:#ff6f3c;--accent3:#a259ff;--green:#00ffb2;--yellow:#ffe566;--text:#e8eaf6;--muted:#7b82a8;--border:rgba(0,229,255,0.13);}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 10%,rgba(162,89,255,0.08) 0%,transparent 70%),radial-gradient(ellipse 50% 40% at 80% 80%,rgba(0,229,255,0.07) 0%,transparent 70%);pointer-events:none;z-index:0;}
+  .container{max-width:860px;margin:0 auto;padding:40px 20px 80px;position:relative;z-index:1;}
+  .yt-header{background:linear-gradient(135deg,#1a1040 0%,#13162a 100%);border:1.5px solid var(--border);border-radius:20px;padding:36px 36px 28px;margin-bottom:32px;position:relative;overflow:hidden;animation:fadeDown 0.7s ease both;}
+  .yt-header::after{content:'🧩';position:absolute;right:32px;top:24px;font-size:72px;opacity:0.13;pointer-events:none;}
+  .badge-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .badge{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-radius:50px;border:1.5px solid;}
+  .badge-cyan{color:var(--accent);border-color:var(--accent);background:rgba(0,229,255,0.07);}
+  .badge-orange{color:var(--accent2);border-color:var(--accent2);background:rgba(255,111,60,0.07);}
+  .badge-purple{color:var(--accent3);border-color:var(--accent3);background:rgba(162,89,255,0.07);}
+  .yt-header h1{font-family:'Baloo 2',cursive;font-size:2.3rem;font-weight:800;line-height:1.2;margin-bottom:10px;background:linear-gradient(90deg,var(--accent3),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .yt-header .subtitle{font-size:1rem;color:var(--muted);font-weight:600;margin-bottom:18px;}
+  .progress-bar-wrap{background:rgba(255,255,255,0.07);border-radius:50px;height:6px;overflow:hidden;margin-bottom:6px;}
+  .progress-bar-fill{height:100%;width:56%;background:linear-gradient(90deg,var(--accent3),var(--accent));border-radius:50px;animation:growBar 1.2s 0.5s ease both;}
+  .progress-label{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+  .section-card{background:var(--card);border:1.5px solid var(--border);border-radius:18px;padding:28px 30px;margin-bottom:22px;animation:fadeUp 0.6s ease both;}
+  .section-card:nth-child(2){animation-delay:0.08s;}.section-card:nth-child(3){animation-delay:0.15s;}.section-card:nth-child(4){animation-delay:0.22s;}.section-card:nth-child(5){animation-delay:0.29s;}.section-card:nth-child(6){animation-delay:0.36s;}
+  .section-title{font-family:'Baloo 2',cursive;font-size:1.25rem;font-weight:800;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+  p,li{font-size:1rem;line-height:1.75;color:#c5cae9;}
+  .hi{color:var(--yellow);font-weight:700;}.eng{color:var(--accent2);font-weight:700;}
+  .code-word{font-family:'JetBrains Mono',monospace;background:rgba(0,229,255,0.10);color:var(--accent);border-radius:5px;padding:1px 7px;font-size:0.92em;}
+  .code-block{background:#090b14;border:1.5px solid rgba(0,229,255,0.10);border-radius:13px;padding:20px 22px;margin:16px 0;position:relative;overflow:hidden;}
+  .code-block::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent3),var(--accent),var(--accent2));border-radius:13px 13px 0 0;}
+  .code-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:block;}
+  pre{font-family:'JetBrains Mono',monospace;font-size:0.9rem;line-height:1.8;white-space:pre;overflow-x:auto;color:#e8eaf6;}
+  .c-comment{color:#4a5578;}.c-keyword{color:#a259ff;font-weight:700;}.c-string{color:#00ffb2;}.c-number{color:var(--accent2);}.c-func{color:var(--accent);}.c-var{color:var(--yellow);}.c-method{color:#ff9de2;}
+  .concept-box{border-left:4px solid var(--accent3);background:rgba(162,89,255,0.07);border-radius:0 12px 12px 0;padding:14px 18px;margin:14px 0;}
+  .concept-box.orange{border-color:var(--accent2);background:rgba(255,111,60,0.07);}
+  .concept-box.green{border-color:var(--green);background:rgba(0,255,178,0.06);}
+  .concept-box.cyan{border-color:var(--accent);background:rgba(0,229,255,0.06);}
+  .tip-box{background:linear-gradient(135deg,rgba(162,89,255,0.07),rgba(0,229,255,0.07));border:1.5px solid rgba(162,89,255,0.18);border-radius:13px;padding:16px 20px;margin-top:14px;display:flex;gap:12px;align-items:flex-start;}
+  .tip-icon{font-size:1.5rem;flex-shrink:0;margin-top:2px;}.tip-text{font-size:0.97rem;color:#b0bec5;line-height:1.65;}
+  .output-box{background:#06080f;border:1.5px dashed rgba(0,255,178,0.2);border-radius:10px;padding:14px 18px;margin-top:10px;}
+  .output-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;display:block;}
+  .output-box pre{color:var(--green);}
+  /* dict visual */
+  .dict-visual{margin:14px 0;display:flex;flex-direction:column;gap:6px;}
+  .dict-row{display:flex;align-items:center;gap:10px;background:var(--card2);border-radius:10px;padding:10px 16px;border:1px solid rgba(255,255,255,0.06);}
+  .dict-key{font-family:'JetBrains Mono',monospace;color:var(--accent);font-size:0.9rem;min-width:60px;}
+  .dict-arrow{color:var(--muted);}
+  .dict-val{font-family:'JetBrains Mono',monospace;color:var(--green);font-size:0.9rem;}
+  /* func anatomy */
+  .func-anatomy{background:#090b14;border:1.5px solid rgba(162,89,255,0.2);border-radius:13px;padding:20px 22px;margin:16px 0;position:relative;}
+  .func-anatomy::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent3),var(--accent));border-radius:13px 13px 0 0;}
+  .func-line{display:flex;align-items:center;gap:10px;margin:4px 0;font-family:'JetBrains Mono',monospace;font-size:0.9rem;}
+  .func-ann{font-size:0.78rem;color:var(--muted);margin-left:8px;font-family:'Nunito',sans-serif;}
+  .quiz-card{background:linear-gradient(135deg,#1a1040,#0d1525);border:1.5px solid rgba(162,89,255,0.25);border-radius:18px;padding:26px 30px;margin-bottom:22px;}
+  .quiz-title{font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:800;color:var(--accent3);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+  .quiz-q{font-size:0.97rem;color:#c5cae9;margin-bottom:12px;line-height:1.6;}
+  .quiz-options{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+  .quiz-opt{background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);border-radius:10px;padding:11px 16px;font-family:'JetBrains Mono',monospace;font-size:0.88rem;color:#b0bec5;cursor:pointer;transition:all 0.2s;text-align:left;}
+  .quiz-opt:hover{border-color:var(--accent3);color:var(--accent3);background:rgba(162,89,255,0.08);}
+  .quiz-opt.correct{border-color:var(--green);color:var(--green);background:rgba(0,255,178,0.08);}
+  .quiz-opt.wrong{border-color:var(--accent2);color:var(--accent2);background:rgba(255,111,60,0.08);}
+  .quiz-feedback{font-size:0.9rem;margin-top:8px;display:none;padding:8px 14px;border-radius:8px;}
+  .quiz-feedback.show{display:block;}.quiz-feedback.correct-fb{background:rgba(0,255,178,0.08);color:var(--green);}.quiz-feedback.wrong-fb{background:rgba(255,111,60,0.08);color:var(--accent2);}
+  .summary-card{background:linear-gradient(135deg,#0f1c14,#0d0f1a);border:1.5px solid rgba(0,255,178,0.18);border-radius:18px;padding:26px 30px;margin-bottom:22px;}
+  .summary-list{list-style:none;padding:0;}
+  .summary-list li{padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;gap:10px;font-size:0.97rem;}
+  .summary-list li:last-child{border:none;}.check{color:var(--green);font-size:1.1rem;}
+  .next-card{background:linear-gradient(135deg,#13162a,#1a1040);border:1.5px solid rgba(0,229,255,0.18);border-radius:18px;padding:24px 30px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;}
+  .next-label{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
+  .next-title{font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:800;color:var(--text);}
+  .next-btn{background:linear-gradient(135deg,var(--accent3),var(--accent));color:#0d0f1a;border:none;border-radius:10px;padding:12px 24px;font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;cursor:pointer;white-space:nowrap;transition:opacity 0.2s,transform 0.2s;}
+  .next-btn:hover{opacity:0.88;transform:translateX(3px);}
+  hr.divider{border:none;border-top:1.5px solid rgba(255,255,255,0.05);margin:22px 0;}
+  @keyframes fadeDown{from{opacity:0;transform:translateY(-24px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes growBar{from{width:0%;}to{width:56%;}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="yt-header">
+    <div class="badge-row">
+      <span class="badge badge-cyan">Python for Cybersecurity</span>
+      <span class="badge badge-orange">Module 4 of 8</span>
+      <span class="badge badge-purple">English</span>
+    </div>
+    <h1>Functions & Dictionaries</h1>
+    <p class="subtitle">🧩 Write reusable code and look up data instantly — power tools for any hacker</p>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill"></div></div>
+    <span class="progress-label">Course progress: Module 4 / 8 complete</span>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title"><span class="icon">⚙️</span> What is a Function?</div>
+    <p>A <span class="hi">function</span> is a named block of reusable code. Instead of writing the same logic 10 times, you write it once in a function and call it by name whenever you need it. This is called <span class="eng">DRY — Don't Repeat Yourself</span>.</p>
+    <div class="code-block">
+      <span class="code-label">python – defining and calling a function</span>
+      <pre><span class="c-comment"># Define a function with "def"</span>
+<span class="c-keyword">def</span> <span class="c-func">greet_hacker</span>():
+    <span class="c-func">print</span>(<span class="c-string">"Welcome to the terminal, hacker!"</span>)
+    <span class="c-func">print</span>(<span class="c-string">"Stay ethical. Stay legal."</span>)
+
+<span class="c-comment"># Call the function — just write its name with ()</span>
+<span class="c-func">greet_hacker</span>()
+<span class="c-func">greet_hacker</span>()   <span class="c-comment"># call it again — no need to rewrite!</span></pre>
+    </div>
+    <div class="output-box">
+      <span class="output-label">⬇ output</span>
+      <pre>Welcome to the terminal, hacker!
+Stay ethical. Stay legal.
+Welcome to the terminal, hacker!
+Stay ethical. Stay legal.</pre>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title"><span class="icon">📥</span> Parameters & Return Values</div>
+    <p><span class="hi">Parameters</span> let you pass data INTO a function. <span class="eng">return</span> sends a result back OUT so you can use it elsewhere.</p>
+    <div class="code-block">
+      <span class="code-label">python – functions with parameters & return</span>
+      <pre><span class="c-comment"># Function with a parameter</span>
+<span class="c-keyword">def</span> <span class="c-func">get_service</span>(<span class="c-var">port</span>):
+    <span class="c-keyword">if</span> <span class="c-var">port</span> == <span class="c-number">22</span>:
+        <span class="c-keyword">return</span> <span class="c-string">"SSH"</span>
+    <span class="c-keyword">elif</span> <span class="c-var">port</span> == <span class="c-number">80</span>:
+        <span class="c-keyword">return</span> <span class="c-string">"HTTP"</span>
+    <span class="c-keyword">elif</span> <span class="c-var">port</span> == <span class="c-number">443</span>:
+        <span class="c-keyword">return</span> <span class="c-string">"HTTPS"</span>
+    <span class="c-keyword">else</span>:
+        <span class="c-keyword">return</span> <span class="c-string">"Unknown"</span>
+
+<span class="c-comment"># Call with different arguments</span>
+<span class="c-func">print</span>(<span class="c-func">get_service</span>(<span class="c-number">22</span>))    <span class="c-comment"># SSH</span>
+<span class="c-func">print</span>(<span class="c-func">get_service</span>(<span class="c-number">443</span>))   <span class="c-comment"># HTTPS</span>
+<span class="c-func">print</span>(<span class="c-func">get_service</span>(<span class="c-number">9999</span>))  <span class="c-comment"># Unknown</span>
+
+<span class="c-comment"># Store the returned value</span>
+<span class="c-var">svc</span> = <span class="c-func">get_service</span>(<span class="c-number">80</span>)
+<span class="c-func">print</span>(<span class="c-string">f"Port 80 runs: {<span class="c-var">svc</span>}"</span>)  <span class="c-comment"># Port 80 runs: HTTP</span>
+
+<span class="c-comment"># Multiple parameters</span>
+<span class="c-keyword">def</span> <span class="c-func">scan_report</span>(<span class="c-var">ip</span>, <span class="c-var">port</span>):
+    <span class="c-var">svc</span> = <span class="c-func">get_service</span>(<span class="c-var">port</span>)
+    <span class="c-func">print</span>(<span class="c-string">f"[*] {<span class="c-var">ip</span>}:{<span class="c-var">port</span>} → {<span class="c-var">svc</span>}"</span>)
+
+<span class="c-func">scan_report</span>(<span class="c-string">"10.0.0.1"</span>, <span class="c-number">22</span>)
+<span class="c-func">scan_report</span>(<span class="c-string">"10.0.0.2"</span>, <span class="c-number">80</span>)</pre>
+    </div>
+    <div class="output-box">
+      <span class="output-label">⬇ output</span>
+      <pre>SSH
+HTTPS
+Unknown
+Port 80 runs: HTTP
+[*] 10.0.0.1:22 → SSH
+[*] 10.0.0.2:80 → HTTP</pre>
+    </div>
+    <div class="concept-box cyan">
+      💡 <strong>Default parameters:</strong> You can set a default value so the argument is optional:<br>
+      <code style="color:var(--accent)">def scan(ip, port=80):</code> — if you call <code style="color:var(--accent)">scan("10.0.0.1")</code> it uses port 80 automatically.
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title"><span class="icon">📖</span> Dictionaries — Key → Value Lookup</div>
+    <p>A <span class="hi">dictionary</span> stores data as <span class="eng">key: value</span> pairs — like a real dictionary where you look up a word (key) to get its definition (value). Instant lookup — no looping needed.</p>
+    <div class="dict-visual">
+      <div class="dict-row"><span class="dict-key">21</span><span class="dict-arrow">→</span><span class="dict-val">"FTP"</span></div>
+      <div class="dict-row"><span class="dict-key">22</span><span class="dict-arrow">→</span><span class="dict-val">"SSH"</span></div>
+      <div class="dict-row"><span class="dict-key">80</span><span class="dict-arrow">→</span><span class="dict-val">"HTTP"</span></div>
+      <div class="dict-row"><span class="dict-key">443</span><span class="dict-arrow">→</span><span class="dict-val">"HTTPS"</span></div>
+      <div class="dict-row"><span class="dict-key">3306</span><span class="dict-arrow">→</span><span class="dict-val">"MySQL"</span></div>
+    </div>
+    <div class="code-block">
+      <span class="code-label">python – dictionaries</span>
+      <pre><span class="c-comment"># Create a dictionary { key: value }</span>
+<span class="c-var">services</span> = {
+    <span class="c-number">21</span>:   <span class="c-string">"FTP"</span>,
+    <span class="c-number">22</span>:   <span class="c-string">"SSH"</span>,
+    <span class="c-number">80</span>:   <span class="c-string">"HTTP"</span>,
+    <span class="c-number">443</span>:  <span class="c-string">"HTTPS"</span>,
+    <span class="c-number">3306</span>: <span class="c-string">"MySQL"</span>
+}
+
+<span class="c-comment"># Look up a value by key</span>
+<span class="c-func">print</span>(<span class="c-var">services</span>[<span class="c-number">22</span>])        <span class="c-comment"># SSH</span>
+<span class="c-func">print</span>(<span class="c-var">services</span>[<span class="c-number">443</span>])       <span class="c-comment"># HTTPS</span>
+
+<span class="c-comment"># .get() — safe lookup (no crash if key missing)</span>
+<span class="c-func">print</span>(<span class="c-var">services</span>.<span class="c-method">get</span>(<span class="c-number">9999</span>, <span class="c-string">"Unknown"</span>))  <span class="c-comment"># Unknown</span>
+
+<span class="c-comment"># Add a new entry</span>
+<span class="c-var">services</span>[<span class="c-number">8080</span>] = <span class="c-string">"HTTP-Alt"</span>
+
+<span class="c-comment"># Check if key exists</span>
+<span class="c-func">print</span>(<span class="c-number">22</span> <span class="c-keyword">in</span> <span class="c-var">services</span>)      <span class="c-comment"># True</span>
+
+<span class="c-comment"># Loop through a dictionary</span>
+<span class="c-keyword">for</span> <span class="c-var">port</span>, <span class="c-var">svc</span> <span class="c-keyword">in</span> <span class="c-var">services</span>.<span class="c-method">items</span>():
+    <span class="c-func">print</span>(<span class="c-string">f"Port {<span class="c-var">port</span>:5} → {<span class="c-var">svc</span>}"</span>)</pre>
+    </div>
+    <div class="concept-box orange">
+      ⚠️ <strong>Dict vs List:</strong> Lists use numeric indexes <code style="color:var(--accent2)">[0]</code>. Dicts use named keys <code style="color:var(--accent2)">["ssh"]</code>. Use a dict when your data has meaningful labels — always use <code style="color:var(--accent2)">.get()</code> to avoid crashes on missing keys.
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title"><span class="icon">🛡️</span> Mini Project — Service Scanner with Functions + Dicts</div>
+    <div class="code-block">
+      <span class="code-label">python – service_scanner.py</span>
+      <pre><span class="c-comment"># ===== Service Scanner =====</span>
+
+<span class="c-var">SERVICES</span> = {
+    <span class="c-number">21</span>:<span class="c-string">"FTP"</span>, <span class="c-number">22</span>:<span class="c-string">"SSH"</span>, <span class="c-number">23</span>:<span class="c-string">"Telnet"</span>,
+    <span class="c-number">25</span>:<span class="c-string">"SMTP"</span>, <span class="c-number">53</span>:<span class="c-string">"DNS"</span>, <span class="c-number">80</span>:<span class="c-string">"HTTP"</span>,
+    <span class="c-number">443</span>:<span class="c-string">"HTTPS"</span>, <span class="c-number">3306</span>:<span class="c-string">"MySQL"</span>, <span class="c-number">8080</span>:<span class="c-string">"HTTP-Alt"</span>
+}
+<span class="c-var">RISKY</span> = [<span class="c-number">21</span>, <span class="c-number">23</span>, <span class="c-number">3306</span>]
+
+<span class="c-keyword">def</span> <span class="c-func">identify</span>(<span class="c-var">port</span>):
+    <span class="c-keyword">return</span> <span class="c-var">SERVICES</span>.<span class="c-method">get</span>(<span class="c-var">port</span>, <span class="c-string">"Unknown"</span>)
+
+<span class="c-keyword">def</span> <span class="c-func">risk_level</span>(<span class="c-var">port</span>):
+    <span class="c-keyword">return</span> <span class="c-string">"HIGH"</span> <span class="c-keyword">if</span> <span class="c-var">port</span> <span class="c-keyword">in</span> <span class="c-var">RISKY</span> <span class="c-keyword">else</span> <span class="c-string">"LOW"</span>
+
+<span class="c-keyword">def</span> <span class="c-func">scan</span>(<span class="c-var">ip</span>, <span class="c-var">open_ports</span>):
+    <span class="c-func">print</span>(<span class="c-string">f"\n{'='*45}"</span>)
+    <span class="c-func">print</span>(<span class="c-string">f"  🔍 TARGET: {<span class="c-var">ip</span>}"</span>)
+    <span class="c-func">print</span>(<span class="c-string">f"{'='*45}"</span>)
+    <span class="c-keyword">for</span> <span class="c-var">port</span> <span class="c-keyword">in</span> <span class="c-var">open_ports</span>:
+        <span class="c-var">svc</span>  = <span class="c-func">identify</span>(<span class="c-var">port</span>)
+        <span class="c-var">risk</span> = <span class="c-func">risk_level</span>(<span class="c-var">port</span>)
+        <span class="c-var">icon</span> = <span class="c-string">"⚠️ "</span> <span class="c-keyword">if</span> <span class="c-var">risk</span>==<span class="c-string">"HIGH"</span> <span class="c-keyword">else</span> <span class="c-string">"✅"</span>
+        <span class="c-func">print</span>(<span class="c-string">f"  {<span class="c-var">icon</span>} {<span class="c-var">port</span>:5} | {<span class="c-var">svc</span>:10} | {<span class="c-var">risk</span>}"</span>)
+    <span class="c-func">print</span>(<span class="c-string">f"{'='*45}\n"</span>)
+
+<span class="c-comment"># Run the scanner</span>
+<span class="c-func">scan</span>(<span class="c-string">"192.168.1.1"</span>, [<span class="c-number">22</span>, <span class="c-number">80</span>, <span class="c-number">21</span>, <span class="c-number">443</span>, <span class="c-number">3306</span>])</pre>
+    </div>
+    <div class="output-box">
+      <span class="output-label">⬇ output</span>
+      <pre>=============================================
+  🔍 TARGET: 192.168.1.1
+=============================================
+  ✅    22 | SSH        | LOW
+  ✅    80 | HTTP       | LOW
+  ⚠️    21 | FTP        | HIGH
+  ✅   443 | HTTPS      | LOW
+  ⚠️  3306 | MySQL      | HIGH
+=============================================</pre>
+    </div>
+  </div>
+
+  <div class="quiz-card">
+    <div class="quiz-title">🧩 Quick Quiz — Module 4</div>
+    <div class="quiz-q">❓ <strong>Q1.</strong> What keyword is used to send a value back from a function?</div>
+    <div class="quiz-options" id="q1">
+      <button class="quiz-opt" onclick="checkAnswer(this,false,'q1-fb','send is not a Python keyword!')">send</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,false,'q1-fb','output is not a Python keyword either.')">output</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,true,'q1-fb','Correct! return sends a value back to whoever called the function.')">return ✅</button>
+    </div>
+    <div class="quiz-feedback" id="q1-fb"></div>
+    <hr class="divider">
+    <div class="quiz-q">❓ <strong>Q2.</strong> In a dictionary <span class="code-word">d = {"a": 1}</span>, how do you safely get a missing key without crashing?</div>
+    <div class="quiz-options" id="q2">
+      <button class="quiz-opt" onclick="checkAnswer(this,false,'q2-fb','d[\"missing\"] will raise a KeyError and crash your program!')">d["missing"]</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,true,'q2-fb','Perfect! .get() returns None (or a default you provide) instead of crashing.')">d.get("missing") ✅</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,false,'q2-fb','d.find() does not exist for dictionaries.')">d.find("missing")</button>
+    </div>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <div class="summary-card">
+    <div class="section-title"><span class="icon">✅</span> Module 4 — Summary</div>
+    <ul class="summary-list">
+      <li><span class="check">✅</span> Functions use <span class="code-word">def name():</span> — write once, call many times</li>
+      <li><span class="check">✅</span> Parameters pass data in; <span class="code-word">return</span> sends results back out</li>
+      <li><span class="check">✅</span> Default parameters make arguments optional</li>
+      <li><span class="check">✅</span> Dictionaries store <span class="code-word">key: value</span> pairs — instant lookup by key</li>
+      <li><span class="check">✅</span> Always use <span class="code-word">.get(key, default)</span> for safe dictionary access</li>
+      <li><span class="check">✅</span> Loop dicts with <span class="code-word">.items()</span> to get both key and value</li>
+    </ul>
+  </div>
+
+  <div class="next-card">
+    <div>
+      <div class="next-label">Coming Up Next</div>
+      <div class="next-title">📂 Module 5 — File Handling (Read Wordlists!)</div>
+      <p style="font-size:0.88rem;color:var(--muted);margin-top:4px;">Read rockyou.txt, write logs, parse real files — essential for every hacker script!</p>
+    </div>
+    <button class="next-btn">Module 5 →</button>
+  </div>
+</div>
+<script>
+function checkAnswer(btn,isCorrect,feedbackId,msg){
+  btn.parentElement.querySelectorAll('.quiz-opt').forEach(b=>b.style.pointerEvents='none');
+  btn.classList.add(isCorrect?'correct':'wrong');
+  const fb=document.getElementById(feedbackId);
+  fb.textContent=(isCorrect?'🎉 Correct! ':'❌ Wrong! ')+msg;
+  fb.className='quiz-feedback show '+(isCorrect?'correct-fb':'wrong-fb');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Module 8 – Requests & Web Recon | Cybersecurity</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d0f1a;--card:#13162a;--card2:#181c30;--accent:#00e5ff;--accent2:#ff6f3c;--accent3:#a259ff;--green:#00ffb2;--yellow:#ffe566;--gold:#ffd700;--text:#e8eaf6;--muted:#7b82a8;--border:rgba(0,229,255,0.13);}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(255,215,0,0.06) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 10% 80%,rgba(162,89,255,0.07) 0%,transparent 70%),radial-gradient(ellipse 40% 30% at 80% 60%,rgba(0,229,255,0.05) 0%,transparent 70%);pointer-events:none;z-index:0;}
+  .container{max-width:860px;margin:0 auto;padding:40px 20px 80px;position:relative;z-index:1;}
+  .yt-header{background:linear-gradient(135deg,#1c1800 0%,#1a1040 50%,#13162a 100%);border:2px solid rgba(255,215,0,0.25);border-radius:20px;padding:36px 36px 28px;margin-bottom:32px;position:relative;overflow:hidden;animation:fadeDown 0.7s ease both;box-shadow:0 0 40px rgba(255,215,0,0.06);}
+  .yt-header::after{content:'🎓';position:absolute;right:32px;top:24px;font-size:72px;opacity:0.15;pointer-events:none;}
+  .badge-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .badge{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-radius:50px;border:1.5px solid;}
+  .badge-cyan{color:var(--accent);border-color:var(--accent);background:rgba(0,229,255,0.07);}
+  .badge-orange{color:var(--accent2);border-color:var(--accent2);background:rgba(255,111,60,0.07);}
+  .badge-gold{color:var(--gold);border-color:var(--gold);background:rgba(255,215,0,0.08);box-shadow:0 0 12px rgba(255,215,0,0.15);}
+  .yt-header h1{font-family:'Baloo 2',cursive;font-size:2.3rem;font-weight:800;line-height:1.2;margin-bottom:10px;background:linear-gradient(90deg,var(--gold),var(--accent2),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .yt-header .subtitle{font-size:1rem;color:var(--muted);font-weight:600;margin-bottom:18px;}
+  .progress-bar-wrap{background:rgba(255,255,255,0.07);border-radius:50px;height:6px;overflow:hidden;margin-bottom:6px;}
+  .progress-bar-fill{height:100%;width:100%;background:linear-gradient(90deg,var(--gold),var(--accent2),var(--accent));border-radius:50px;animation:growBar 1.2s 0.5s ease both;box-shadow:0 0 8px rgba(255,215,0,0.3);}
+  .progress-label{font-size:12px;color:var(--gold);font-family:'JetBrains Mono',monospace;}
+  .section-card{background:var(--card);border:1.5px solid var(--border);border-radius:18px;padding:28px 30px;margin-bottom:22px;animation:fadeUp 0.6s ease both;}
+  .section-card:nth-child(2){animation-delay:0.08s;}.section-card:nth-child(3){animation-delay:0.15s;}.section-card:nth-child(4){animation-delay:0.22s;}.section-card:nth-child(5){animation-delay:0.29s;}.section-card:nth-child(6){animation-delay:0.36s;}.section-card:nth-child(7){animation-delay:0.43s;}
+  .section-title{font-family:'Baloo 2',cursive;font-size:1.25rem;font-weight:800;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+  p,li{font-size:1rem;line-height:1.75;color:#c5cae9;}
+  .hi{color:var(--yellow);font-weight:700;}.eng{color:var(--accent2);font-weight:700;}
+  .code-word{font-family:'JetBrains Mono',monospace;background:rgba(0,229,255,0.10);color:var(--accent);border-radius:5px;padding:1px 7px;font-size:0.92em;}
+  .code-block{background:#090b14;border:1.5px solid rgba(0,229,255,0.10);border-radius:13px;padding:20px 22px;margin:16px 0;position:relative;overflow:hidden;}
+  .code-block::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--accent2),var(--accent));border-radius:13px 13px 0 0;}
+  .code-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:block;}
+  pre{font-family:'JetBrains Mono',monospace;font-size:0.9rem;line-height:1.8;white-space:pre;overflow-x:auto;color:#e8eaf6;}
+  .c-comment{color:#4a5578;}.c-keyword{color:#a259ff;font-weight:700;}.c-string{color:#00ffb2;}.c-number{color:var(--accent2);}.c-func{color:var(--accent);}.c-var{color:var(--yellow);}.c-method{color:#ff9de2;}
+  .concept-box{border-left:4px solid var(--accent);background:rgba(0,229,255,0.06);border-radius:0 12px 12px 0;padding:14px 18px;margin:14px 0;}
+  .concept-box.orange{border-color:var(--accent2);background:rgba(255,111,60,0.07);}
+  .concept-box.green{border-color:var(--green);background:rgba(0,255,178,0.06);}
+  .concept-box.purple{border-color:var(--accent3);background:rgba(162,89,255,0.07);}
+  .concept-box.gold{border-color:var(--gold);background:rgba(255,215,0,0.05);}
+  .tip-box{background:linear-gradient(135deg,rgba(255,215,0,0.05),rgba(255,111,60,0.05));border:1.5px solid rgba(255,215,0,0.18);border-radius:13px;padding:16px 20px;margin-top:14px;display:flex;gap:12px;align-items:flex-start;}
+  .tip-icon{font-size:1.5rem;flex-shrink:0;margin-top:2px;}.tip-text{font-size:0.97rem;color:#b0bec5;line-height:1.65;}
+  .output-box{background:#06080f;border:1.5px dashed rgba(0,255,178,0.2);border-radius:10px;padding:14px 18px;margin-top:10px;}
+  .output-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;display:block;}
+  .output-box pre{color:var(--green);}
+  /* http status grid */
+  .status-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0;}
+  @media(max-width:560px){.status-grid{grid-template-columns:1fr 1fr;}}
+  .status-card{border-radius:12px;padding:12px 14px;border:1.5px solid rgba(255,255,255,0.06);text-align:center;}
+  .status-card .sc{font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700;margin-bottom:4px;}
+  .status-card .st{font-size:0.8rem;color:var(--muted);}
+  .s2{background:rgba(0,255,178,0.06);}.s2 .sc{color:var(--green);}
+  .s3{background:rgba(0,229,255,0.06);}.s3 .sc{color:var(--accent);}
+  .s4{background:rgba(255,111,60,0.07);}.s4 .sc{color:var(--accent2);}
+  .s5{background:rgba(255,92,92,0.07);}.s5 .sc{color:#ff5c5c;}
+  /* roadmap */
+  .roadmap{display:flex;flex-direction:column;gap:8px;margin-top:14px;}
+  .rm-item{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:12px;background:var(--card2);border:1.5px solid rgba(255,255,255,0.05);}
+  .rm-item:hover{border-color:rgba(0,229,255,0.2);}
+  .rm-icon{font-size:1.3rem;flex-shrink:0;}
+  .rm-text{font-size:0.95rem;color:#c5cae9;}
+  .rm-text strong{color:var(--accent);}
+  /* completion banner */
+  .complete-banner{background:linear-gradient(135deg,#1c1800,#1a1040);border:2px solid rgba(255,215,0,0.3);border-radius:18px;padding:30px;text-align:center;margin-bottom:22px;position:relative;overflow:hidden;}
+  .complete-banner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(255,215,0,0.05),transparent);pointer-events:none;}
+  .complete-title{font-family:'Baloo 2',cursive;font-size:2rem;font-weight:800;background:linear-gradient(90deg,var(--gold),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;}
+  .complete-sub{color:var(--muted);font-size:1rem;}
+  .quiz-card{background:linear-gradient(135deg,#1a1040,#0d1525);border:1.5px solid rgba(162,89,255,0.25);border-radius:18px;padding:26px 30px;margin-bottom:22px;}
+  .quiz-title{font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:800;color:var(--accent3);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+  .quiz-q{font-size:0.97rem;color:#c5cae9;margin-bottom:12px;line-height:1.6;}
+  .quiz-options{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+  .quiz-opt{background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);border-radius:10px;padding:11px 16px;font-family:'JetBrains Mono',monospace;font-size:0.88rem;color:#b0bec5;cursor:pointer;transition:all 0.2s;text-align:left;}
+  .quiz-opt:hover{border-color:var(--accent3);color:var(--accent3);background:rgba(162,89,255,0.08);}
+  .quiz-opt.correct{border-color:var(--green);color:var(--green);background:rgba(0,255,178,0.08);}
+  .quiz-opt.wrong{border-color:var(--accent2);color:var(--accent2);background:rgba(255,111,60,0.08);}
+  .quiz-feedback{font-size:0.9rem;margin-top:8px;display:none;padding:8px 14px;border-radius:8px;}
+  .quiz-feedback.show{display:block;}.quiz-feedback.correct-fb{background:rgba(0,255,178,0.08);color:var(--green);}.quiz-feedback.wrong-fb{background:rgba(255,111,60,0.08);color:var(--accent2);}
+  .summary-card{background:linear-gradient(135deg,#0f1c14,#0d0f1a);border:1.5px solid rgba(0,255,178,0.18);border-radius:18px;padding:26px 30px;margin-bottom:22px;}
+  .summary-list{list-style:none;padding:0;}
+  .summary-list li{padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;gap:10px;font-size:0.97rem;}
+  .summary-list li:last-child{border:none;}.check{color:var(--green);font-size:1.1rem;}
+  hr.divider{border:none;border-top:1.5px solid rgba(255,255,255,0.05);margin:22px 0;}
+  @keyframes fadeDown{from{opacity:0;transform:translateY(-24px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes growBar{from{width:0%;}to{width:100%;}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="yt-header">
+    <div class="badge-row">
+      <span class="badge badge-cyan">Python for Cybersecurity</span>
+      <span class="badge badge-orange">Module 8 of 8</span>
+      <span class="badge badge-gold">🏆 Final Module</span>
+    </div>
+    <h1>Requests & Web Recon</h1>
+    <p class="subtitle">🌐 HTTP requests, header analysis, directory brute force — complete your toolkit</p>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill"></div></div>
+    <span class="progress-label">🎉 Course complete! 8 / 8 modules</span>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title"><span class="icon">📦</span> Installing the requests Library</div>
+    <p>Unlike <span class="code-word">socket</span>, <span class="code-word">os</span>, and <span class="code-word">sys</span>, the <span class="hi">requests</span> library is not built-in — you install it once and it handles all HTTP complexity for you.</p>
+    <div class="code-block">
+      <span class="code-label">terminal – install requests</span>
+      <pre><span class="c-comment"># Install using pip</span>
+pip3 install requests
+
+<span class="c-comment"># Then import in your Python script</span>
+<span class="c-keyword">import</span> <span class="c-var">requests</span></pre>
+    </div>
+    <div class="concept-box gold">
+      🏆 <strong>Why requests over raw sockets for HTTP?</strong> Raw sockets require you to manually build HTTP headers, handle redirects, decode responses, and manage cookies. The <code style="color:var(--gold)">requests</code> library handles all of that automatically in one line.
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title"><span class="icon">🌐</span> Making HTTP Requests</div>
+    <div class="code-block">
+      <span class="code-label">python – basic http requests</span>
+      <pre><span class="c-keyword">import</span> <span class="c-var">requests</span>
+
+<span class="c-comment"># GET request — fetch a page</span>
+<span class="c-var">r</span> = <span class="c-var">requests</span>.<span class="c-method">get</span>(<span class="c-string">"http://httpbin.org/get"</span>)
+
+<span class="c-comment"># Status code</span>
+<span class="c-func">print</span>(<span class="c-var">r</span>.<span class="c-var">status_code</span>)      <span class="c-comment"># 200</span>
+
+<span class="c-comment"># Response headers</span>
+<span class="c-func">print</span>(<span class="c-var">r</span>.<span class="c-var">headers</span>)          <span class="c-comment"># dict of headers</span>
+<span class="c-func">print</span>(<span class="c-var">r</span>.<span class="c-var">headers</span>[<span class="c-string">"Server"</span>])  <span class="c-comment"># e.g. "nginx"</span>
+
+<span class="c-comment"># Response body</span>
+<span class="c-func">print</span>(<span class="c-var">r</span>.<span class="c-var">text</span>)             <span class="c-comment"># full HTML/text</span>
+<span class="c-func">print</span>(<span class="c-var">r</span>.<span class="c-var">json</span>())           <span class="c-comment"># parse JSON automatically</span>
+
+<span class="c-comment"># With timeout — always use this!</span>
+<span class="c-var">r</span> = <span class="c-var">requests</span>.<span class="c-method">get</span>(<span class="c-string">"http://target.com"</span>, <span class="c-var">timeout</span>=<span class="c-number">3</span>)
+
+<span class="c-comment"># Custom headers — disguise your user agent</span>
+<span class="c-var">headers</span> = {<span class="c-string">"User-Agent"</span>: <span class="c-string">"Mozilla/5.0 (compatible)"</span>}
+<span class="c-var">r</span> = <span class="c-var">requests</span>.<span class="c-method">get</span>(<span class="c-string">"http://target.com"</span>, <span class="c-var">headers</span>=<span class="c-var">headers</span>)</pre>
+    </div>
+    <div class="status-grid">
+      <div class="status-card s2"><div class="sc">2xx</div><div class="st">Success</div></div>
+      <div class="status-card s3"><div class="sc">3xx</div><div class="st">Redirect</div></div>
+      <div class="status-card s4"><div class="sc">404</div><div class="st">Not Found</div></div>
+      <div class="status-card s4"><div class="sc">403</div><div class="st">Forbidden</div></div>
+      <div class="status-card s5"><div class="sc">500</div><div class="st">Server Error</div></div>
+      <div class="status-card s2"><div class="sc">200</div><div class="st">OK ✅</div></div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title"><span class="icon">🔍</span> Header Analysis — Fingerprint a Server</div>
+    <p>HTTP response headers reveal <span class="hi">critical information</span> about a server — what software it runs, security configurations, and misconfigurations.</p>
+    <div class="code-block">
+      <span class="code-label">python – header analyser</span>
+      <pre><span class="c-keyword">import</span> <span class="c-var">requests</span>
+
+<span class="c-keyword">def</span> <span class="c-func">analyse_headers</span>(<span class="c-var">url</span>):
+    <span class="c-keyword">try</span>:
+        <span class="c-var">r</span> = <span class="c-var">requests</span>.<span class="c-method">get</span>(<span class="c-var">url</span>, <span class="c-var">timeout</span>=<span class="c-number">5</span>, <span class="c-var">verify</span>=<span class="c-keyword">False</span>)
+        <span class="c-var">h</span> = <span class="c-var">r</span>.<span class="c-var">headers</span>
+
+        <span class="c-func">print</span>(<span class="c-string">f"\n🔍 Header Analysis: {<span class="c-var">url</span>}"</span>)
+        <span class="c-func">print</span>(<span class="c-string">"=" * 45</span>)
+        <span class="c-func">print</span>(<span class="c-string">f"  Status       : {<span class="c-var">r</span>.<span class="c-var">status_code</span>}"</span>)
+        <span class="c-func">print</span>(<span class="c-string">f"  Server       : {<span class="c-var">h</span>.<span class="c-method">get</span>(<span class="c-string">'Server'</span>, <span class="c-string">'Hidden'</span>)}"</span>)
+        <span class="c-func">print</span>(<span class="c-string">f"  Powered-By   : {<span class="c-var">h</span>.<span class="c-method">get</span>(<span class="c-string">'X-Powered-By'</span>, <span class="c-string">'Hidden'</span>)}"</span>)
+        <span class="c-func">print</span>(<span class="c-string">f"  Content-Type : {<span class="c-var">h</span>.<span class="c-method">get</span>(<span class="c-string">'Content-Type'</span>, <span class="c-string">'N/A'</span>)}"</span>)
+
+        <span class="c-comment"># Security header checks</span>
+        <span class="c-func">print</span>(<span class="c-string">"\n  Security Headers:"</span>)
+        <span class="c-var">sec</span> = [
+            (<span class="c-string">"X-Frame-Options"</span>,   <span class="c-string">"Clickjacking protection"</span>),
+            (<span class="c-string">"X-XSS-Protection"</span>,  <span class="c-string">"XSS filter"</span>),
+            (<span class="c-string">"Strict-Transport-Security"</span>, <span class="c-string">"HSTS"</span>),
+            (<span class="c-string">"Content-Security-Policy"</span>,   <span class="c-string">"CSP"</span>),
+        ]
+        <span class="c-keyword">for</span> <span class="c-var">hdr</span>, <span class="c-var">desc</span> <span class="c-keyword">in</span> <span class="c-var">sec</span>:
+            <span class="c-var">present</span> = <span class="c-var">hdr</span> <span class="c-keyword">in</span> <span class="c-var">h</span>
+            <span class="c-var">icon</span> = <span class="c-string">"✅"</span> <span class="c-keyword">if</span> <span class="c-var">present</span> <span class="c-keyword">else</span> <span class="c-string">"⚠️ "</span>
+            <span class="c-func">print</span>(<span class="c-string">f"  {<span class="c-var">icon</span>} {<span class="c-var">desc</span>:<span class="c-number">28</span>} {'SET' <span class="c-keyword">if</span> <span class="c-var">present</span> <span class="c-keyword">else</span> 'MISSING'}"</span>)
+        <span class="c-func">print</span>(<span class="c-string">"=" * 45</span>)
+
+    <span class="c-keyword">except</span> <span class="c-var">requests</span>.<span class="c-var">exceptions</span>.<span class="c-var">RequestException</span> <span class="c-keyword">as</span> <span class="c-var">e</span>:
+        <span class="c-func">print</span>(<span class="c-string">f"❌ Error: {<span class="c-var">e</span>}"</span>)
+
+<span class="c-func">analyse_headers</span>(<span class="c-string">"http://httpbin.org"</span>)</pre>
+    </div>
+    <div class="output-box">
+      <span class="output-label">⬇ sample output</span>
+      <pre>🔍 Header Analysis: http://httpbin.org
+=============================================
+  Status       : 200
+  Server       : gunicorn/19.9.0
+  Powered-By   : Hidden
+  Content-Type : text/html; charset=utf-8
+
+  Security Headers:
+  ⚠️  Clickjacking protection     MISSING
+  ⚠️  XSS filter                  MISSING
+  ✅ HSTS                         SET
+  ⚠️  CSP                         MISSING
+=============================================</pre>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title"><span class="icon">🗂️</span> Mini Project — Directory Brute Forcer</div>
+    <p>This tool tries common directory names on a web server — a core technique in web application pentesting:</p>
+    <div class="code-block">
+      <span class="code-label">python – dir_bruteforce.py</span>
+      <pre><span class="c-keyword">import</span> <span class="c-var">requests</span>
+
+<span class="c-var">BASE_URL</span> = <span class="c-string">"http://testphp.vulnweb.com"</span>  <span class="c-comment"># legal test site</span>
+<span class="c-var">WORDLIST</span> = [
+    <span class="c-string">"admin"</span>, <span class="c-string">"login"</span>, <span class="c-string">"dashboard"</span>,
+    <span class="c-string">"backup"</span>, <span class="c-string">"config"</span>, <span class="c-string">"uploads"</span>,
+    <span class="c-string">"api"</span>, <span class="c-string">"test"</span>, <span class="c-string">"hidden"</span>, <span class="c-string">"secret"</span>
+]
+
+<span class="c-var">found</span> = []
+
+<span class="c-func">print</span>(<span class="c-string">f"[*] Target  : {<span class="c-var">BASE_URL</span>}"</span>)
+<span class="c-func">print</span>(<span class="c-string">f"[*] Testing : {<span class="c-func">len</span>(<span class="c-var">WORDLIST</span>)} directories\n"</span>)
+
+<span class="c-keyword">for</span> <span class="c-var">path</span> <span class="c-keyword">in</span> <span class="c-var">WORDLIST</span>:
+    <span class="c-var">url</span> = <span class="c-string">f"{<span class="c-var">BASE_URL</span>}/{<span class="c-var">path</span>}"</span>
+    <span class="c-keyword">try</span>:
+        <span class="c-var">r</span> = <span class="c-var">requests</span>.<span class="c-method">get</span>(<span class="c-var">url</span>, <span class="c-var">timeout</span>=<span class="c-number">3</span>, <span class="c-var">allow_redirects</span>=<span class="c-keyword">False</span>)
+        <span class="c-keyword">if</span> <span class="c-var">r</span>.<span class="c-var">status_code</span> == <span class="c-number">200</span>:
+            <span class="c-func">print</span>(<span class="c-string">f"  ✅ FOUND  [{<span class="c-var">r</span>.<span class="c-var">status_code</span>}] → /{<span class="c-var">path</span>}"</span>)
+            <span class="c-var">found</span>.<span class="c-method">append</span>(<span class="c-var">url</span>)
+        <span class="c-keyword">elif</span> <span class="c-var">r</span>.<span class="c-var">status_code</span> == <span class="c-number">403</span>:
+            <span class="c-func">print</span>(<span class="c-string">f"  🔒 FORBID [{<span class="c-var">r</span>.<span class="c-var">status_code</span>}] → /{<span class="c-var">path</span>}"</span>)
+        <span class="c-keyword">else</span>:
+            <span class="c-func">print</span>(<span class="c-string">f"  ❌       [{<span class="c-var">r</span>.<span class="c-var">status_code</span>}] → /{<span class="c-var">path</span>}"</span>)
+    <span class="c-keyword">except</span>:
+        <span class="c-func">print</span>(<span class="c-string">f"  ⚡ TIMEOUT → /{<span class="c-var">path</span>}"</span>)
+
+<span class="c-func">print</span>(<span class="c-string">f"\n[+] {<span class="c-func">len</span>(<span class="c-var">found</span>)} accessible paths found:"</span>)
+<span class="c-keyword">for</span> <span class="c-var">u</span> <span class="c-keyword">in</span> <span class="c-var">found</span>:
+    <span class="c-func">print</span>(<span class="c-string">f"    → {<span class="c-var">u</span>}"</span>)</pre>
+    </div>
+    <div class="output-box">
+      <span class="output-label">⬇ sample output</span>
+      <pre>[*] Target  : http://testphp.vulnweb.com
+[*] Testing : 10 directories
+
+  ✅ FOUND  [200] → /admin
+  ❌       [404] → /login
+  ✅ FOUND  [200] → /uploads
+  🔒 FORBID [403] → /config
+  ❌       [404] → /backup
+  ...
+
+[+] 2 accessible paths found:
+    → http://testphp.vulnweb.com/admin
+    → http://testphp.vulnweb.com/uploads</pre>
+    </div>
+  </div>
+
+  <div class="quiz-card">
+    <div class="quiz-title">🧩 Final Quiz — Module 8</div>
+    <div class="quiz-q">❓ <strong>Q1.</strong> What does HTTP status code <span class="code-word">403</span> mean?</div>
+    <div class="quiz-options" id="q1">
+      <button class="quiz-opt" onclick="checkAnswer(this,false,'q1-fb','404 means Not Found — the resource does not exist.')">Not Found</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,true,'q1-fb','Correct! 403 Forbidden means the resource exists but you do not have permission to access it. This is actually useful during recon!')">Forbidden — exists but no access ✅</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,false,'q1-fb','500 is a Server Error — something crashed on the server side.')">Server Error</button>
+    </div>
+    <div class="quiz-feedback" id="q1-fb"></div>
+    <hr class="divider">
+    <div class="quiz-q">❓ <strong>Q2.</strong> Which attribute gives you the response body as text?</div>
+    <div class="quiz-options" id="q2">
+      <button class="quiz-opt" onclick="checkAnswer(this,false,'q2-fb','r.headers is a dictionary of response headers, not the body.')">r.headers</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,false,'q2-fb','r.status_code gives the HTTP status number like 200 or 404.')">r.status_code</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,true,'q2-fb','Correct! r.text gives the full response body as a string. Use r.json() if the response is JSON.')">r.text ✅</button>
+    </div>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <div class="summary-card">
+    <div class="section-title"><span class="icon">✅</span> Module 8 — Summary</div>
+    <ul class="summary-list">
+      <li><span class="check">✅</span> Install with <span class="code-word">pip3 install requests</span> — the essential HTTP library</li>
+      <li><span class="check">✅</span> <span class="code-word">requests.get(url, timeout=3)</span> — always set a timeout</li>
+      <li><span class="check">✅</span> <span class="code-word">r.status_code</span>, <span class="code-word">r.text</span>, <span class="code-word">r.headers</span> — the three most used attributes</li>
+      <li><span class="check">✅</span> Response headers reveal server software and security misconfigurations</li>
+      <li><span class="check">✅</span> Directory brute forcing = try common paths and check status codes</li>
+      <li><span class="check">✅</span> 200=found, 403=forbidden(exists!), 404=not found, 500=server error</li>
+    </ul>
+  </div>
+
+  <!-- COURSE COMPLETE -->
+  <div class="complete-banner">
+    <div style="font-size:3rem;margin-bottom:12px;">🏆</div>
+    <div class="complete-title">Course Complete!</div>
+    <div class="complete-sub">You've finished all 8 modules of Python for Cybersecurity</div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title"><span class="icon">🚀</span> What You've Learned — Full Course Recap</div>
+    <div class="roadmap">
+      <div class="rm-item"><span class="rm-icon">1️⃣</span><span class="rm-text"><strong>Variables & Data Types</strong> — Store data: strings, integers, floats, booleans</span></div>
+      <div class="rm-item"><span class="rm-icon">2️⃣</span><span class="rm-text"><strong>Strings</strong> — Slice, split, replace, search — manipulate IPs and logs</span></div>
+      <div class="rm-item"><span class="rm-icon">3️⃣</span><span class="rm-text"><strong>Lists & Loops</strong> — Iterate over ports, targets, wordlists automatically</span></div>
+      <div class="rm-item"><span class="rm-icon">4️⃣</span><span class="rm-text"><strong>Functions & Dicts</strong> — Reusable code + instant key-value lookups</span></div>
+      <div class="rm-item"><span class="rm-icon">5️⃣</span><span class="rm-text"><strong>File Handling</strong> — Read wordlists, write scan logs, parse real files</span></div>
+      <div class="rm-item"><span class="rm-icon">6️⃣</span><span class="rm-text"><strong>Error Handling & OS/SYS</strong> — Crash-proof scripts + CLI arguments</span></div>
+      <div class="rm-item"><span class="rm-icon">7️⃣</span><span class="rm-text"><strong>Sockets</strong> — Built a real TCP port scanner from scratch</span></div>
+      <div class="rm-item"><span class="rm-icon">8️⃣</span><span class="rm-text"><strong>Requests & Web Recon</strong> — HTTP requests, header analysis, dir brute force</span></div>
+    </div>
+    <div class="tip-box" style="margin-top:20px;">
+      <span class="tip-icon">🎯</span>
+      <span class="tip-text">
+        <strong>Your next steps:</strong> Practice on <strong>TryHackMe</strong> and <strong>Hack The Box</strong>. Study for <strong>CompTIA Security+</strong>. Explore <strong>Scapy</strong> for packet crafting, <strong>Paramiko</strong> for SSH automation, and <strong>BeautifulSoup</strong> for web scraping. You now have the Python foundation for all of these!
+      </span>
+    </div>
+  </div>
+</div>
+<script>
+function checkAnswer(btn,isCorrect,feedbackId,msg){
+  btn.parentElement.querySelectorAll('.quiz-opt').forEach(b=>b.style.pointerEvents='none');
+  btn.classList.add(isCorrect?'correct':'wrong');
+  const fb=document.getElementById(feedbackId);
+  fb.textContent=(isCorrect?'🎉 Correct! ':'❌ Wrong! ')+msg;
+  fb.className='quiz-feedback show '+(isCorrect?'correct-fb':'wrong-fb');
+}
+</script>
+</body>
+</html>

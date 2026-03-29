@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Module 6 – Error Handling & OS/SYS | Cybersecurity</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d0f1a;--card:#13162a;--card2:#181c30;--accent:#00e5ff;--accent2:#ff6f3c;--accent3:#a259ff;--green:#00ffb2;--yellow:#ffe566;--text:#e8eaf6;--muted:#7b82a8;--border:rgba(0,229,255,0.13);}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 10% 20%,rgba(255,111,60,0.06) 0%,transparent 70%),radial-gradient(ellipse 50% 40% at 80% 70%,rgba(0,229,255,0.06) 0%,transparent 70%);pointer-events:none;z-index:0;}
+  .container{max-width:860px;margin:0 auto;padding:40px 20px 80px;position:relative;z-index:1;}
+  .yt-header{background:linear-gradient(135deg,#1c100a 0%,#13162a 100%);border:1.5px solid rgba(255,111,60,0.2);border-radius:20px;padding:36px 36px 28px;margin-bottom:32px;position:relative;overflow:hidden;animation:fadeDown 0.7s ease both;}
+  .yt-header::after{content:'⚠️';position:absolute;right:32px;top:24px;font-size:72px;opacity:0.13;pointer-events:none;}
+  .badge-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .badge{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-radius:50px;border:1.5px solid;}
+  .badge-cyan{color:var(--accent);border-color:var(--accent);background:rgba(0,229,255,0.07);}
+  .badge-orange{color:var(--accent2);border-color:var(--accent2);background:rgba(255,111,60,0.07);}
+  .badge-red{color:#ff5c5c;border-color:#ff5c5c;background:rgba(255,92,92,0.07);}
+  .yt-header h1{font-family:'Baloo 2',cursive;font-size:2.3rem;font-weight:800;line-height:1.2;margin-bottom:10px;background:linear-gradient(90deg,var(--accent2),var(--yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .yt-header .subtitle{font-size:1rem;color:var(--muted);font-weight:600;margin-bottom:18px;}
+  .progress-bar-wrap{background:rgba(255,255,255,0.07);border-radius:50px;height:6px;overflow:hidden;margin-bottom:6px;}
+  .progress-bar-fill{height:100%;width:84%;background:linear-gradient(90deg,var(--accent2),var(--yellow));border-radius:50px;animation:growBar 1.2s 0.5s ease both;}
+  .progress-label{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+  .section-card{background:var(--card);border:1.5px solid var(--border);border-radius:18px;padding:28px 30px;margin-bottom:22px;animation:fadeUp 0.6s ease both;}
+  .section-card:nth-child(2){animation-delay:0.08s;}.section-card:nth-child(3){animation-delay:0.15s;}.section-card:nth-child(4){animation-delay:0.22s;}.section-card:nth-child(5){animation-delay:0.29s;}.section-card:nth-child(6){animation-delay:0.36s;}
+  .section-title{font-family:'Baloo 2',cursive;font-size:1.25rem;font-weight:800;color:var(--accent2);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+  p,li{font-size:1rem;line-height:1.75;color:#c5cae9;}
+  .hi{color:var(--yellow);font-weight:700;}.eng{color:var(--accent2);font-weight:700;}
+  .code-word{font-family:'JetBrains Mono',monospace;background:rgba(255,111,60,0.10);color:var(--accent2);border-radius:5px;padding:1px 7px;font-size:0.92em;}
+  .code-block{background:#090b14;border:1.5px solid rgba(255,111,60,0.10);border-radius:13px;padding:20px 22px;margin:16px 0;position:relative;overflow:hidden;}
+  .code-block::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent2),var(--yellow),var(--green));border-radius:13px 13px 0 0;}
+  .code-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:block;}
+  pre{font-family:'JetBrains Mono',monospace;font-size:0.9rem;line-height:1.8;white-space:pre;overflow-x:auto;color:#e8eaf6;}
+  .c-comment{color:#4a5578;}.c-keyword{color:#a259ff;font-weight:700;}.c-string{color:#00ffb2;}.c-number{color:var(--accent2);}.c-func{color:var(--accent);}.c-var{color:var(--yellow);}.c-method{color:#ff9de2;}.c-exc{color:#ff5c5c;font-weight:700;}
+  .concept-box{border-left:4px solid var(--accent2);background:rgba(255,111,60,0.07);border-radius:0 12px 12px 0;padding:14px 18px;margin:14px 0;}
+  .concept-box.green{border-color:var(--green);background:rgba(0,255,178,0.06);}
+  .concept-box.purple{border-color:var(--accent3);background:rgba(162,89,255,0.07);}
+  .concept-box.cyan{border-color:var(--accent);background:rgba(0,229,255,0.06);}
+  .tip-box{background:linear-gradient(135deg,rgba(255,111,60,0.07),rgba(255,229,102,0.05));border:1.5px solid rgba(255,111,60,0.18);border-radius:13px;padding:16px 20px;margin-top:14px;display:flex;gap:12px;align-items:flex-start;}
+  .tip-icon{font-size:1.5rem;flex-shrink:0;margin-top:2px;}.tip-text{font-size:0.97rem;color:#b0bec5;line-height:1.65;}
+  .output-box{background:#06080f;border:1.5px dashed rgba(0,255,178,0.2);border-radius:10px;padding:14px 18px;margin-top:10px;}
+  .output-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;display:block;}
+  .output-box pre{color:var(--green);}
+  .error-box{background:#06080f;border:1.5px dashed rgba(255,92,92,0.3);border-radius:10px;padding:14px 18px;margin-top:10px;}
+  .error-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:#ff5c5c;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;display:block;}
+  .error-box pre{color:#ff5c5c;}
+  /* try/except flow */
+  .flow-box{display:flex;flex-direction:column;gap:6px;margin:14px 0;}
+  .flow-step{display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:0.88rem;}
+  .flow-step.try{background:rgba(0,229,255,0.07);border:1px solid rgba(0,229,255,0.2);color:var(--accent);}
+  .flow-step.exc{background:rgba(255,111,60,0.07);border:1px solid rgba(255,111,60,0.2);color:var(--accent2);}
+  .flow-step.els{background:rgba(0,255,178,0.06);border:1px solid rgba(0,255,178,0.2);color:var(--green);}
+  .flow-step.fin{background:rgba(255,229,102,0.06);border:1px solid rgba(255,229,102,0.2);color:var(--yellow);}
+  .flow-icon{font-size:1.1rem;}
+  .quiz-card{background:linear-gradient(135deg,#1a1040,#0d1525);border:1.5px solid rgba(162,89,255,0.25);border-radius:18px;padding:26px 30px;margin-bottom:22px;}
+  .quiz-title{font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:800;color:var(--accent3);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+  .quiz-q{font-size:0.97rem;color:#c5cae9;margin-bottom:12px;line-height:1.6;}
+  .quiz-options{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+  .quiz-opt{background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);border-radius:10px;padding:11px 16px;font-family:'JetBrains Mono',monospace;font-size:0.88rem;color:#b0bec5;cursor:pointer;transition:all 0.2s;text-align:left;}
+  .quiz-opt:hover{border-color:var(--accent3);color:var(--accent3);background:rgba(162,89,255,0.08);}
+  .quiz-opt.correct{border-color:var(--green);color:var(--green);background:rgba(0,255,178,0.08);}
+  .quiz-opt.wrong{border-color:var(--accent2);color:var(--accent2);background:rgba(255,111,60,0.08);}
+  .quiz-feedback{font-size:0.9rem;margin-top:8px;display:none;padding:8px 14px;border-radius:8px;}
+  .quiz-feedback.show{display:block;}.quiz-feedback.correct-fb{background:rgba(0,255,178,0.08);color:var(--green);}.quiz-feedback.wrong-fb{background:rgba(255,111,60,0.08);color:var(--accent2);}
+  .summary-card{background:linear-gradient(135deg,#0f1c14,#0d0f1a);border:1.5px solid rgba(0,255,178,0.18);border-radius:18px;padding:26px 30px;margin-bottom:22px;}
+  .summary-list{list-style:none;padding:0;}
+  .summary-list li{padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;gap:10px;font-size:0.97rem;}
+  .summary-list li:last-child{border:none;}.check{color:var(--green);font-size:1.1rem;}
+  .next-card{background:linear-gradient(135deg,#13162a,#1a1040);border:1.5px solid rgba(0,229,255,0.18);border-radius:18px;padding:24px 30px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;}
+  .next-label{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
+  .next-title{font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:800;color:var(--text);}
+  .next-btn{background:linear-gradient(135deg,var(--accent2),var(--yellow));color:#0d0f1a;border:none;border-radius:10px;padding:12px 24px;font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;cursor:pointer;white-space:nowrap;transition:opacity 0.2s,transform 0.2s;}
+  .next-btn:hover{opacity:0.88;transform:translateX(3px);}
+  hr.divider{border:none;border-top:1.5px solid rgba(255,255,255,0.05);margin:22px 0;}
+  @keyframes fadeDown{from{opacity:0;transform:translateY(-24px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes growBar{from{width:0%;}to{width:84%;}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="yt-header">
+    <div class="badge-row">
+      <span class="badge badge-cyan">Python for Cybersecurity</span>
+      <span class="badge badge-orange">Module 6 of 8</span>
+      <span class="badge badge-red">English</span>
+    </div>
+    <h1>Error Handling & OS/SYS</h1>
+    <p class="subtitle">⚠️ Stop crashes, handle the unexpected, and control your OS from Python</p>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill"></div></div>
+    <span class="progress-label">Course progress: Module 6 / 8 complete</span>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title"><span class="icon">💥</span> Why Errors Happen</div>
+    <p>Every program encounters unexpected situations — a file that doesn't exist, a network timeout, a user entering the wrong input. Without error handling, your script <span class="hi">crashes completely</span>. With it, you handle the problem gracefully and keep going.</p>
+    <div class="error-box">
+      <span class="error-label">❌ crash without error handling</span>
+      <pre>FileNotFoundError: [Errno 2] No such file or directory: 'targets.txt'
+PermissionError: [Errno 13] Permission denied: '/etc/shadow'
+ConnectionRefusedError: [Errno 111] Connection refused
+ValueError: invalid literal for int() with base 10: 'abc'</pre>
+    </div>
+    <div class="concept-box green">
+      ✅ <strong>Goal:</strong> Instead of crashing, your script should catch these errors, print a helpful message, and either retry, skip, or exit cleanly.
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title"><span class="icon">🛡️</span> try / except — The Core Pattern</div>
+    <div class="flow-box">
+      <div class="flow-step try"><span class="flow-icon">▶️</span> try: — run the risky code here</div>
+      <div class="flow-step exc"><span class="flow-icon">🚨</span> except: — if an error occurs, run this instead</div>
+      <div class="flow-step els"><span class="flow-icon">✅</span> else: — runs only if NO error occurred (optional)</div>
+      <div class="flow-step fin"><span class="flow-icon">🔒</span> finally: — ALWAYS runs, error or not (cleanup)</div>
+    </div>
+    <div class="code-block">
+      <span class="code-label">python – try/except basics</span>
+      <pre><span class="c-comment"># Without error handling — CRASHES if file missing</span>
+<span class="c-comment"># f = open("missing.txt", "r")  ← crashes here</span>
+
+<span class="c-comment"># With error handling — handles it gracefully</span>
+<span class="c-keyword">try</span>:
+    <span class="c-keyword">with</span> <span class="c-func">open</span>(<span class="c-string">"targets.txt"</span>, <span class="c-string">"r"</span>) <span class="c-keyword">as</span> <span class="c-var">f</span>:
+        <span class="c-var">data</span> = <span class="c-var">f</span>.<span class="c-method">read</span>()
+        <span class="c-func">print</span>(<span class="c-string">"File loaded!"</span>)
+<span class="c-keyword">except</span> <span class="c-exc">FileNotFoundError</span>:
+    <span class="c-func">print</span>(<span class="c-string">"❌ Error: targets.txt not found."</span>)
+<span class="c-keyword">except</span> <span class="c-exc">PermissionError</span>:
+    <span class="c-func">print</span>(<span class="c-string">"❌ Error: No permission to read file."</span>)
+<span class="c-keyword">except</span> <span class="c-exc">Exception</span> <span class="c-keyword">as</span> <span class="c-var">e</span>:
+    <span class="c-func">print</span>(<span class="c-string">f"❌ Unexpected error: {<span class="c-var">e</span>}"</span>)
+<span class="c-keyword">else</span>:
+    <span class="c-func">print</span>(<span class="c-string">"✅ File read successfully!"</span>)
+<span class="c-keyword">finally</span>:
+    <span class="c-func">print</span>(<span class="c-string">"[*] Done — script continues..."</span>)</pre>
+    </div>
+    <div class="tip-box">
+      <span class="tip-icon">🎯</span>
+      <span class="tip-text"><strong>Best practice:</strong> Always catch specific exceptions first (<span class="code-word">FileNotFoundError</span>, <span class="code-word">ValueError</span>) before the generic <span class="code-word">Exception</span>. Catching everything with bare <span class="code-word">except:</span> hides bugs!</span>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title"><span class="icon">🖥️</span> os Module — Talk to Your Operating System</div>
+    <p>The <span class="code-word">os</span> module lets Python interact with your operating system — list files, check paths, run commands, create directories.</p>
+    <div class="code-block">
+      <span class="code-label">python – os module essentials</span>
+      <pre><span class="c-keyword">import</span> <span class="c-var">os</span>
+
+<span class="c-comment"># Current working directory</span>
+<span class="c-func">print</span>(<span class="c-var">os</span>.<span class="c-method">getcwd</span>())            <span class="c-comment"># /home/kali/tools</span>
+
+<span class="c-comment"># List files in a directory</span>
+<span class="c-func">print</span>(<span class="c-var">os</span>.<span class="c-method">listdir</span>(<span class="c-string">"."</span>))        <span class="c-comment"># ['scanner.py', 'targets.txt']</span>
+
+<span class="c-comment"># Check if a file/path exists</span>
+<span class="c-func">print</span>(<span class="c-var">os</span>.<span class="c-method">path</span>.<span class="c-method">exists</span>(<span class="c-string">"/etc/passwd"</span>))  <span class="c-comment"># True</span>
+
+<span class="c-comment"># Check if it's a file or directory</span>
+<span class="c-func">print</span>(<span class="c-var">os</span>.<span class="c-method">path</span>.<span class="c-method">isfile</span>(<span class="c-string">"scanner.py"</span>))   <span class="c-comment"># True</span>
+<span class="c-func">print</span>(<span class="c-var">os</span>.<span class="c-method">path</span>.<span class="c-method">isdir</span>(<span class="c-string">"/etc"</span>))          <span class="c-comment"># True</span>
+
+<span class="c-comment"># Create a directory</span>
+<span class="c-var">os</span>.<span class="c-method">makedirs</span>(<span class="c-string">"scan_results"</span>, <span class="c-var">exist_ok</span>=<span class="c-keyword">True</span>)
+
+<span class="c-comment"># Run a system command (use carefully!)</span>
+<span class="c-var">os</span>.<span class="c-method">system</span>(<span class="c-string">"whoami"</span>)            <span class="c-comment"># runs whoami in shell</span>
+
+<span class="c-comment"># Get environment variables</span>
+<span class="c-func">print</span>(<span class="c-var">os</span>.<span class="c-method">environ</span>.<span class="c-method">get</span>(<span class="c-string">"HOME"</span>))  <span class="c-comment"># /home/kali</span></pre>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title"><span class="icon">⚙️</span> sys Module — Control Your Script</div>
+    <p>The <span class="code-word">sys</span> module gives you control over the Python runtime — accept command-line arguments, exit cleanly, and more.</p>
+    <div class="code-block">
+      <span class="code-label">python – sys module</span>
+      <pre><span class="c-keyword">import</span> <span class="c-var">sys</span>
+
+<span class="c-comment"># Exit the script cleanly</span>
+<span class="c-keyword">if</span> <span class="c-func">len</span>(<span class="c-var">sys</span>.<span class="c-var">argv</span>) &lt; <span class="c-number">2</span>:
+    <span class="c-func">print</span>(<span class="c-string">"Usage: python scanner.py &lt;target_ip&gt;"</span>)
+    <span class="c-var">sys</span>.<span class="c-method">exit</span>(<span class="c-number">1</span>)   <span class="c-comment"># exit with error code 1</span>
+
+<span class="c-comment"># sys.argv — command line arguments</span>
+<span class="c-comment"># python scanner.py 192.168.1.1</span>
+<span class="c-comment"># sys.argv[0] = "scanner.py"</span>
+<span class="c-comment"># sys.argv[1] = "192.168.1.1"</span>
+<span class="c-var">target</span> = <span class="c-var">sys</span>.<span class="c-var">argv</span>[<span class="c-number">1</span>]
+<span class="c-func">print</span>(<span class="c-string">f"Scanning: {<span class="c-var">target</span>}"</span>)
+
+<span class="c-comment"># Python version info</span>
+<span class="c-func">print</span>(<span class="c-var">sys</span>.<span class="c-var">version</span>)   <span class="c-comment"># 3.11.2</span></pre>
+    </div>
+    <div class="concept-box purple">
+      🔥 <strong>sys.argv is key for real tools!</strong> Every professional hacking tool accepts arguments from the command line. <code style="color:var(--accent3)">python scanner.py 10.0.0.1 22</code> — target and port passed right in. This is how Nmap, Nikto, and every CLI tool works.
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title"><span class="icon">🛡️</span> Mini Project — Robust File Scanner</div>
+    <div class="code-block">
+      <span class="code-label">python – robust_scanner.py</span>
+      <pre><span class="c-keyword">import</span> <span class="c-var">os</span>, <span class="c-var">sys</span>
+
+<span class="c-keyword">def</span> <span class="c-func">load_targets</span>(<span class="c-var">filepath</span>):
+    <span class="c-keyword">if</span> <span class="c-keyword">not</span> <span class="c-var">os</span>.<span class="c-method">path</span>.<span class="c-method">exists</span>(<span class="c-var">filepath</span>):
+        <span class="c-func">print</span>(<span class="c-string">f"❌ File not found: {<span class="c-var">filepath</span>}"</span>)
+        <span class="c-var">sys</span>.<span class="c-method">exit</span>(<span class="c-number">1</span>)
+    <span class="c-keyword">try</span>:
+        <span class="c-keyword">with</span> <span class="c-func">open</span>(<span class="c-var">filepath</span>, <span class="c-string">"r"</span>) <span class="c-keyword">as</span> <span class="c-var">f</span>:
+            <span class="c-keyword">return</span> [<span class="c-var">line</span>.<span class="c-method">strip</span>() <span class="c-keyword">for</span> <span class="c-var">line</span> <span class="c-keyword">in</span> <span class="c-var">f</span> <span class="c-keyword">if</span> <span class="c-var">line</span>.<span class="c-method">strip</span>()]
+    <span class="c-keyword">except</span> <span class="c-exc">PermissionError</span>:
+        <span class="c-func">print</span>(<span class="c-string">f"❌ Permission denied: {<span class="c-var">filepath</span>}"</span>)
+        <span class="c-var">sys</span>.<span class="c-method">exit</span>(<span class="c-number">1</span>)
+
+<span class="c-keyword">def</span> <span class="c-func">save_results</span>(<span class="c-var">results</span>, <span class="c-var">outfile</span>):
+    <span class="c-keyword">try</span>:
+        <span class="c-keyword">with</span> <span class="c-func">open</span>(<span class="c-var">outfile</span>, <span class="c-string">"w"</span>) <span class="c-keyword">as</span> <span class="c-var">f</span>:
+            <span class="c-keyword">for</span> <span class="c-var">line</span> <span class="c-keyword">in</span> <span class="c-var">results</span>:
+                <span class="c-var">f</span>.<span class="c-method">write</span>(<span class="c-var">line</span> + <span class="c-string">"\n"</span>)
+        <span class="c-func">print</span>(<span class="c-string">f"✅ Results saved → {<span class="c-var">outfile</span>}"</span>)
+    <span class="c-keyword">except</span> <span class="c-exc">Exception</span> <span class="c-keyword">as</span> <span class="c-var">e</span>:
+        <span class="c-func">print</span>(<span class="c-string">f"❌ Could not save: {<span class="c-var">e</span>}"</span>)
+
+<span class="c-comment"># Main logic</span>
+<span class="c-var">targets</span> = <span class="c-func">load_targets</span>(<span class="c-string">"targets.txt"</span>)
+<span class="c-var">results</span> = []
+<span class="c-func">print</span>(<span class="c-string">f"[*] Loaded {<span class="c-func">len</span>(<span class="c-var">targets</span>)} targets\n"</span>)
+
+<span class="c-keyword">for</span> <span class="c-var">target</span> <span class="c-keyword">in</span> <span class="c-var">targets</span>:
+    <span class="c-var">result</span> = <span class="c-string">f"[SCAN] {<span class="c-var">target</span>} — checked"</span>
+    <span class="c-var">results</span>.<span class="c-method">append</span>(<span class="c-var">result</span>)
+    <span class="c-func">print</span>(<span class="c-var">result</span>)
+
+<span class="c-func">save_results</span>(<span class="c-var">results</span>, <span class="c-string">"output.txt"</span>)</pre>
+    </div>
+  </div>
+
+  <div class="quiz-card">
+    <div class="quiz-title">🧩 Quick Quiz — Module 6</div>
+    <div class="quiz-q">❓ <strong>Q1.</strong> Which block in try/except ALWAYS runs, whether there's an error or not?</div>
+    <div class="quiz-options" id="q1">
+      <button class="quiz-opt" onclick="checkAnswer(this,false,'q1-fb','except only runs when there IS an error.')">except</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,false,'q1-fb','else only runs when there is NO error.')">else</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,true,'q1-fb','Correct! finally always runs — perfect for cleanup like closing connections.')">finally ✅</button>
+    </div>
+    <div class="quiz-feedback" id="q1-fb"></div>
+    <hr class="divider">
+    <div class="quiz-q">❓ <strong>Q2.</strong> What does <span class="code-word">sys.argv[1]</span> give you?</div>
+    <div class="quiz-options" id="q2">
+      <button class="quiz-opt" onclick="checkAnswer(this,false,'q2-fb','sys.argv[0] is the script name itself.')">The script name</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,true,'q2-fb','Exactly! argv[0] is the script, argv[1] is the first argument the user passes in the terminal.')">The first command-line argument ✅</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,false,'q2-fb','sys.version has version info — not argv.')">The Python version</button>
+    </div>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <div class="summary-card">
+    <div class="section-title"><span class="icon">✅</span> Module 6 — Summary</div>
+    <ul class="summary-list">
+      <li><span class="check">✅</span> <span class="code-word">try/except</span> catches errors gracefully — your script keeps running</li>
+      <li><span class="check">✅</span> Catch specific exceptions first, generic <span class="code-word">Exception</span> last</li>
+      <li><span class="check">✅</span> <span class="code-word">finally</span> always runs — use for cleanup</li>
+      <li><span class="check">✅</span> <span class="code-word">os.path.exists()</span> — check before opening files</li>
+      <li><span class="check">✅</span> <span class="code-word">sys.argv</span> — accept arguments from command line like real tools</li>
+      <li><span class="check">✅</span> <span class="code-word">sys.exit(1)</span> — exit with error code when something goes wrong</li>
+    </ul>
+  </div>
+
+  <div class="next-card">
+    <div>
+      <div class="next-label">Coming Up Next</div>
+      <div class="next-title">🌐 Module 7 — Sockets & Networking</div>
+      <p style="font-size:0.88rem;color:var(--muted);margin-top:4px;">Build a REAL working port scanner from scratch using Python sockets!</p>
+    </div>
+    <button class="next-btn">Module 7 →</button>
+  </div>
+</div>
+<script>
+function checkAnswer(btn,isCorrect,feedbackId,msg){
+  btn.parentElement.querySelectorAll('.quiz-opt').forEach(b=>b.style.pointerEvents='none');
+  btn.classList.add(isCorrect?'correct':'wrong');
+  const fb=document.getElementById(feedbackId);
+  fb.textContent=(isCorrect?'🎉 Correct! ':'❌ Wrong! ')+msg;
+  fb.className='quiz-feedback show '+(isCorrect?'correct-fb':'wrong-fb');
+}
+</script>
+</body>
+</html>
