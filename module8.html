@@ -84,6 +84,45 @@
   @keyframes fadeDown{from{opacity:0;transform:translateY(-24px);}to{opacity:1;transform:translateY(0);}}
   @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
   @keyframes growBar{from{width:0%;}to{width:100%;}}
+/* NAVBAR */
+.nav-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 25px;
+  padding: 12px;
+  background: rgba(0, 229, 255, 0.05);
+  border: 1.5px solid rgba(0,229,255,0.15);
+  border-radius: 12px;
+}
+
+.nav-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #00e5ff;
+  border: 1px solid rgba(0,229,255,0.3);
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  background: rgba(0,229,255,0.15);
+  transform: translateY(-2px);
+  border-color: #00e5ff;
+}
+
+/* Home button special */
+.nav-btn.home {
+  color: #ffd700;
+  border-color: rgba(255,215,0,0.4);
+}
+
+.nav-btn.home:hover {
+  background: rgba(255,215,0,0.15);
+  border-color: #ffd700;
+}
 </style>
 </head>
 <body>
