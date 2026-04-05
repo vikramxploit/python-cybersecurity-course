@@ -320,7 +320,7 @@ pip3 install requests
     <div class="quiz-q">❓ <strong>Q1.</strong> What does HTTP status code <span class="code-word">403</span> mean?</div>
     <div class="quiz-options" id="q1">
       <button class="quiz-opt" onclick="checkAnswer(this,false,'q1-fb','404 means Not Found — the resource does not exist.')">Not Found</button>
-      <button class="quiz-opt" onclick="checkAnswer(this,true,'q1-fb','Correct! 403 Forbidden means the resource exists but you do not have permission to access it. This is actually useful during recon!')">Forbidden — exists but no access ✅</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,true,'q1-fb','Correct! 403 Forbidden means the resource exists but you do not have permission to access it. This is actually useful during recon!')">Forbidden — exists but no access </button>
       <button class="quiz-opt" onclick="checkAnswer(this,false,'q1-fb','500 is a Server Error — something crashed on the server side.')">Server Error</button>
     </div>
     <div class="quiz-feedback" id="q1-fb"></div>
@@ -329,7 +329,7 @@ pip3 install requests
     <div class="quiz-options" id="q2">
       <button class="quiz-opt" onclick="checkAnswer(this,false,'q2-fb','r.headers is a dictionary of response headers, not the body.')">r.headers</button>
       <button class="quiz-opt" onclick="checkAnswer(this,false,'q2-fb','r.status_code gives the HTTP status number like 200 or 404.')">r.status_code</button>
-      <button class="quiz-opt" onclick="checkAnswer(this,true,'q2-fb','Correct! r.text gives the full response body as a string. Use r.json() if the response is JSON.')">r.text ✅</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,true,'q2-fb','Correct! r.text gives the full response body as a string. Use r.json() if the response is JSON.')">r.text </button>
     </div>
     <div class="quiz-feedback" id="q2-fb"></div>
   </div>
