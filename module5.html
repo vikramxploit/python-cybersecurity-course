@@ -223,7 +223,7 @@
     <div class="quiz-q">❓ <strong>Q1.</strong> What mode should you use to add logs to an existing file WITHOUT deleting old content?</div>
     <div class="quiz-options" id="q1">
       <button class="quiz-opt" onclick="checkAnswer(this,false,'q1-fb','Mode w will overwrite everything — all old logs will be deleted!')">open("log.txt", "w")</button>
-      <button class="quiz-opt" onclick="checkAnswer(this,true,'q1-fb','Correct! Mode a (append) adds to the end without touching existing content.')">open("log.txt", "a") ✅</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,true,'q1-fb','Correct! Mode a (append) adds to the end without touching existing content.')">open("log.txt", "a") </button>
       <button class="quiz-opt" onclick="checkAnswer(this,false,'q1-fb','Mode r is read-only — you cannot write to it.')">open("log.txt", "r")</button>
     </div>
     <div class="quiz-feedback" id="q1-fb"></div>
@@ -231,7 +231,7 @@
     <div class="quiz-q">❓ <strong>Q2.</strong> Why do we call <span class="code-word">.strip()</span> on every line read from a file?</div>
     <div class="quiz-options" id="q2">
       <button class="quiz-opt" onclick="checkAnswer(this,false,'q2-fb','strip() does not make text uppercase — that is .upper().')">To make it uppercase</button>
-      <button class="quiz-opt" onclick="checkAnswer(this,true,'q2-fb','Exactly! Each line has a hidden \\n at the end. strip() removes it so comparisons work correctly.')">To remove the hidden \n newline ✅</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,true,'q2-fb','Exactly! Each line has a hidden \\n at the end. strip() removes it so comparisons work correctly.')">To remove the hidden \n newline </button>
       <button class="quiz-opt" onclick="checkAnswer(this,false,'q2-fb','strip() removes whitespace, not comments.')">To remove Python comments</button>
     </div>
     <div class="quiz-feedback" id="q2-fb"></div>
