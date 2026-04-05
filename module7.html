@@ -256,7 +256,7 @@ Date: Mon, 25 Mar 2026 10:00:00 GMT</pre>
     <div class="quiz-title">🧩 Quick Quiz — Module 7</div>
     <div class="quiz-q">❓ <strong>Q1.</strong> What does <span class="code-word">connect_ex()</span> return when a port is OPEN?</div>
     <div class="quiz-options" id="q1">
-      <button class="quiz-opt" onclick="checkAnswer(this,true,'q1-fb','Correct! connect_ex returns 0 for success (open) and non-zero error codes for closed/filtered ports.')">0 ✅</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,true,'q1-fb','Correct! connect_ex returns 0 for success (open) and non-zero error codes for closed/filtered ports.')">0 </button>
       <button class="quiz-opt" onclick="checkAnswer(this,false,'q1-fb','1 means error — port is closed or filtered.')">1</button>
       <button class="quiz-opt" onclick="checkAnswer(this,false,'q1-fb','connect_ex returns an integer, not True/False directly.')">True</button>
     </div>
@@ -265,7 +265,7 @@ Date: Mon, 25 Mar 2026 10:00:00 GMT</pre>
     <div class="quiz-q">❓ <strong>Q2.</strong> Why do we call <span class="code-word">s.settimeout(1)</span> before connecting?</div>
     <div class="quiz-options" id="q2">
       <button class="quiz-opt" onclick="checkAnswer(this,false,'q2-fb','Timeout does not encrypt anything.')">To encrypt the connection</button>
-      <button class="quiz-opt" onclick="checkAnswer(this,true,'q2-fb','Exactly! Without a timeout, your scanner would hang indefinitely on filtered/firewalled ports. 1 second is a common balance between speed and accuracy.')">So the scanner does not hang on closed ports ✅</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,true,'q2-fb','Exactly! Without a timeout, your scanner would hang indefinitely on filtered/firewalled ports. 1 second is a common balance between speed and accuracy.')">So the scanner does not hang on closed ports </button>
       <button class="quiz-opt" onclick="checkAnswer(this,false,'q2-fb','Timeout controls how long to wait, not which ports to scan.')">To select which ports to scan</button>
     </div>
     <div class="quiz-feedback" id="q2-fb"></div>
